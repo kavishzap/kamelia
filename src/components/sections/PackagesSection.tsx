@@ -30,15 +30,6 @@ const services = [
   "Full event setup",
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.08 * i, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
-
 function ServiceRoseIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -105,11 +96,14 @@ export function PackagesSection() {
             {packages.map((p, i) => (
               <motion.article
                 key={p.title}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  delay: 0.08 * i,
+                  duration: 0.55,
+                  ease: [0.22, 1, 0.36, 1] as const,
+                }}
                 className="max-w-xl sm:max-w-none"
               >
                 <h3 className="w-fit border-b border-[#c9a962]/55 pb-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#f5f0e8]">
