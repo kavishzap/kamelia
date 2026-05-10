@@ -39,18 +39,61 @@ const fadeUp = {
   }),
 };
 
+function ServiceRoseIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M12 22.5v-8"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10.2 14.3c-1.8-.9-3-2.8-3-4.9 0-2.1 1.2-3.9 3-4.8.5-1.5 1.9-2.55 3.5-2.55h.6c1.6 0 3 1.05 3.5 2.55 1.8.9 3 2.7 3 4.8 0 2.1-1.2 4-3 4.9"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 6.5v4.2M9.3 8.4l2.7 2.3M14.7 8.4l-2.7 2.3M10.5 11.2l3 1.1M13.5 11.2l-3 1.1"
+        stroke="currentColor"
+        strokeWidth="0.95"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 17.2c-.8-.4-1.4-1-1.8-1.7M15 17.2c.8-.4 1.4-1 1.8-1.7"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function PackagesSection() {
   return (
     <section
       id="packages"
-      className="relative scroll-mt-24 bg-[#0a0a0a] px-4 py-24 sm:px-6 lg:px-8"
+      className="relative scroll-mt-24 overflow-hidden bg-gradient-to-br from-[#0f0f0f] via-[#0a0a0a] to-[#0f0f0f] px-4 py-24 sm:px-6 lg:px-8"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(201,169,98,0.12),transparent_50%)]" />
+      <div className="relative mx-auto max-w-6xl">
         <p className="text-center font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.35em] text-[#c9a962]">
-          Curated offerings
+          <span className="inline underline decoration-[#c9a962] decoration-1 underline-offset-[0.65rem]">
+            Curated offerings
+          </span>
         </p>
-        <h2 className="mt-3 text-center font-[family-name:var(--font-display)] text-3xl font-semibold text-[#f5f0e8] sm:text-4xl">
-          Packages
+        <h2 className="mt-5 text-center font-[family-name:var(--font-display)] text-3xl font-semibold text-[#f5f0e8] sm:text-4xl">
+          <span className="inline underline decoration-[#c9a962] decoration-2 underline-offset-[0.75rem] sm:underline-offset-[0.85rem]">
+            Packages
+          </span>
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-[#9a948a]">
           Select a foundation — each package is customized with seasonal blooms, palette direction, and
@@ -69,7 +112,7 @@ export function PackagesSection() {
                 viewport={{ once: true, margin: "-60px" }}
                 className="max-w-xl sm:max-w-none"
               >
-                <h3 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[#f5f0e8]">
+                <h3 className="w-fit border-b border-[#c9a962]/55 pb-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#f5f0e8]">
                   {p.title}
                 </h3>
                 <p className="mt-3 leading-relaxed text-[#9a948a]">{p.desc}</p>
@@ -79,9 +122,11 @@ export function PackagesSection() {
 
           <div id="services" className="scroll-mt-24 lg:max-w-xl lg:justify-self-end">
             <p className="font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.35em] text-[#c9a962]">
-              What we create
+              <span className="inline underline decoration-[#c9a962] decoration-1 underline-offset-[0.65rem]">
+                What we create
+              </span>
             </p>
-            <h3 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#f5f0e8] sm:text-3xl">
+            <h3 className="mt-5 w-fit border-b border-[#c9a962]/55 pb-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#f5f0e8] sm:text-3xl">
               Services
             </h3>
             <p className="mt-4 text-[#9a948a]">
@@ -89,7 +134,7 @@ export function PackagesSection() {
               on-site finishing touches the morning of your event.
             </p>
 
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2 sm:gap-x-4 lg:grid-cols-1 xl:grid-cols-2">
+            <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-3 lg:grid-cols-1 lg:gap-y-3 xl:grid-cols-2">
               {services.map((s, i) => (
                 <motion.li
                   key={s}
@@ -97,12 +142,12 @@ export function PackagesSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: 0.05 * i, duration: 0.45 }}
-                  className="flex items-center gap-3 py-1"
+                  className="flex min-w-0 items-start gap-2 py-0.5 sm:items-center sm:gap-3 sm:py-1"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#c9a962]/15 text-sm text-[#c9a962]">
-                    ✦
+                  <ServiceRoseIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#c9a962] sm:mt-0 sm:h-7 sm:w-7" />
+                  <span className="min-w-0 border-b border-[#c9a962]/40 pb-0.5 text-sm font-medium leading-snug text-[#f5f0e8] sm:text-base">
+                    {s}
                   </span>
-                  <span className="font-medium text-[#f5f0e8]">{s}</span>
                 </motion.li>
               ))}
             </ul>

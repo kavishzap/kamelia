@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { HERO_FRAME_COUNT, heroFrameUrls } from "@/data/hero-frames";
 
 function drawCover(
@@ -251,18 +252,18 @@ export function HeroScroll() {
                 scroll to see the stage transform frame by frame.
               </p>
               <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-                <a
-                  href="#contact"
+                <Link
+                  href="/#contact"
                   className="inline-flex min-h-[44px] min-w-[160px] items-center justify-center rounded-full bg-[#c9a962] px-8 py-3 text-sm font-semibold text-[#0a0a0a] shadow-[0_8px_30px_-8px_rgba(0,0,0,0.55)] transition hover:bg-[#d4bc7a] hover:shadow-lg"
                 >
                   Plan Your Event
-                </a>
-                <a
-                  href="#gallery"
+                </Link>
+                <Link
+                  href="/#gallery"
                   className="inline-flex min-h-[44px] min-w-[160px] items-center justify-center rounded-full border border-white/30 bg-black/45 px-8 py-3 text-sm font-semibold text-[#fffdf9] shadow-[0_8px_30px_-8px_rgba(0,0,0,0.45)] transition hover:border-[#c9a962]/60 hover:bg-black/55"
                 >
                   View Gallery
-                </a>
+                </Link>
               </div>
             </article>
           </div>

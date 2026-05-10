@@ -2,15 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import { SocialIcons } from "@/components/SocialIcons";
 
 const links = [
-  { href: "#home", label: "Home" },
-  { href: "#packages", label: "Packages" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#home", label: "Home" },
+  { href: "/#packages", label: "Packages" },
+  { href: "/#gallery", label: "Gallery" },
+  { href: "/#about", label: "About" },
+  { href: "/#contact", label: "Plan your event" },
 ];
+
+function BrandLockup() {
+  return (
+    <div className="flex min-w-0 flex-col leading-tight">
+      <span className="font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-[#f5f0e8] sm:text-lg">
+        Kamelia
+      </span>
+      <span className="mt-0.5 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.2em] text-[#c9a962]/85 sm:text-[0.6875rem] sm:tracking-[0.24em]">
+        The Floral Designer
+      </span>
+    </div>
+  );
+}
 
 /** Thin gold X — matches minimal full-screen menu reference */
 function MenuCloseIcon({ className }: { className?: string }) {
@@ -57,8 +71,8 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-[#0a0a0a]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-        <a
-          href="#home"
+        <Link
+          href="/#home"
           className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3"
           onClick={() => setOpen(false)}
         >
@@ -70,35 +84,22 @@ export function Navbar() {
             decoding="async"
             className="h-9 w-auto shrink-0 object-contain object-left sm:h-10"
           />
-          <span className="flex min-w-0 flex-col gap-0.5">
-            <span className="font-[family-name:var(--font-display)] text-base font-semibold leading-none tracking-tight text-[#f5f0e8] sm:text-lg">
-              Kamelia
-            </span>
-            <span className="font-[family-name:var(--font-display)] text-[0.625rem] uppercase leading-tight tracking-[0.28em] text-[#e8d9b4] sm:text-xs sm:tracking-[0.4em]">
-              The Floral Designer
-            </span>
-          </span>
-        </a>
+          <BrandLockup />
+        </Link>
 
         <nav className="hidden flex-1 justify-center gap-7 lg:flex xl:gap-9">
           {links.map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               className="text-sm font-medium text-[#9a948a] transition-colors hover:text-[#c9a962]"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
-          <a
-            href="#contact"
-            className="hidden rounded-full bg-[#c9a962] px-5 py-2.5 text-sm font-semibold text-[#0a0a0a] shadow-sm transition hover:bg-[#d4bc7a] sm:inline-flex"
-          >
-            Plan Your Event
-          </a>
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -137,21 +138,22 @@ export function Navbar() {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[110] flex min-h-[100dvh] min-w-full flex-col bg-black lg:hidden"
           >
-            <div className="flex shrink-0 items-center justify-between px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:px-8">
-              <a
-                href="#home"
-                className="flex min-w-0 max-w-[70%] items-center py-1"
+            <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:px-8">
+              <Link
+                href="/#home"
+                className="flex min-w-0 flex-1 items-center gap-3 py-1"
                 onClick={() => setOpen(false)}
               >
                 <img
                   src="/logo_white.png"
-                  alt="Kamelia — The Floral Designer"
+                  alt=""
                   width={720}
                   height={240}
                   decoding="async"
-                  className="h-12 w-auto max-h-14 object-contain object-left sm:h-14"
+                  className="h-11 w-auto shrink-0 object-contain object-left sm:h-12"
                 />
-              </a>
+                <BrandLockup />
+              </Link>
               <button
                 type="button"
                 aria-label="Close menu"
@@ -162,33 +164,26 @@ export function Navbar() {
               </button>
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-4">
+            <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-2">
               <nav className="flex w-full max-w-md flex-col items-center gap-8 sm:gap-10">
                 {links.map((l) => (
-                  <a
+                  <Link
                     key={l.href}
                     href={l.href}
                     className="text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-[#f5f0e8] transition hover:text-[#e8d9b4]"
                     onClick={() => setOpen(false)}
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 ))}
               </nav>
 
               <div className="mt-12 h-px w-14 shrink-0 bg-[#c9a962] sm:mt-14" aria-hidden />
 
-              <p className="mt-8 max-w-xs text-center font-[family-name:var(--font-display)] text-[0.65rem] font-medium uppercase leading-relaxed tracking-[0.42em] text-[#c9a962] sm:text-xs sm:tracking-[0.48em]">
-                The Floral Designer
+              <p className="mt-10 font-[family-name:var(--font-display)] text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[#c9a962]/90">
+                Follow
               </p>
-
-              <a
-                href="#contact"
-                className="mt-10 text-center font-[family-name:var(--font-display)] text-xs font-semibold uppercase tracking-[0.28em] text-[#f5f0e8] underline decoration-[#c9a962]/70 decoration-1 underline-offset-[10px] transition hover:text-[#c9a962] hover:decoration-[#c9a962]"
-                onClick={() => setOpen(false)}
-              >
-                Plan your event
-              </a>
+              <SocialIcons className="mt-3" onNavigate={() => setOpen(false)} />
             </div>
           </motion.div>
         )}

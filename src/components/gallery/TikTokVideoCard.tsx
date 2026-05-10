@@ -10,6 +10,9 @@ type Props = {
   index: number;
   meta: TikTokOEmbedResult | undefined;
   onOpen: () => void;
+  /** Arc / fan gallery — tighter frame, larger corner radius */
+  variant?: "default" | "fan";
+  className?: string;
 };
 
 function FloralPlaceholder({ label }: { label: string }) {
@@ -27,10 +30,11 @@ function FloralPlaceholder({ label }: { label: string }) {
   );
 }
 
-export function TikTokVideoCard({ item, index, meta, onOpen }: Props) {
+export function TikTokVideoCard({ item, index, meta, onOpen, variant = "default", className }: Props) {
   const [thumbError, setThumbError] = useState(false);
   const showThumb = Boolean(meta?.thumbnailUrl) && !thumbError;
   const displayTitle = meta?.title ?? item.title;
+  const isFan = variant === "fan";
 
   return (
     <motion.article
@@ -38,14 +42,24 @@ export function TikTokVideoCard({ item, index, meta, onOpen }: Props) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: 0.08 * index, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative"
+      className={["group relative", className].filter(Boolean).join(" ")}
     >
       <button
         type="button"
         onClick={onOpen}
-        className="relative w-full overflow-hidden rounded-2xl border-2 border-[#e8d9b4]/90 bg-gradient-to-b from-[#fffdf9] to-[#f7f0e4] text-left shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)] ring-1 ring-[#c9a962]/25 transition hover:border-[#c9a962] hover:shadow-[0_28px_70px_-20px_rgba(201,169,98,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a962] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+        className={[
+          "relative w-full overflow-hidden border-2 border-[#e8d9b4]/90 bg-gradient-to-b from-[#fffdf9] to-[#f7f0e4] text-left shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)] ring-1 ring-[#c9a962]/25 transition hover:border-[#c9a962] hover:shadow-[0_28px_70px_-20px_rgba(201,169,98,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a962] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]",
+          isFan ? "rounded-[1.75rem] sm:rounded-[2rem]" : "rounded-2xl",
+        ].join(" ")}
       >
-        <div className="relative aspect-[9/16] max-h-[min(72vh,560px)] w-full sm:max-h-[520px]">
+        <div
+          className={[
+            "relative aspect-[9/16] w-full",
+            isFan
+              ? "max-h-[min(58vh,520px)] sm:max-h-[min(56vh,560px)] md:max-h-[min(54vh,600px)] lg:max-h-[640px]"
+              : "max-h-[min(72vh,560px)] sm:max-h-[520px]",
+          ].join(" ")}
+        >
           {showThumb ? (
             // eslint-disable-next-line @next/next/no-img-element -- remote TikTok CDN host varies
             <img
@@ -61,8 +75,18 @@ export function TikTokVideoCard({ item, index, meta, onOpen }: Props) {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#2a2520]/55 via-transparent to-[#fffdf9]/25" />
 
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#c9a962] text-[#0a0a0a] shadow-lg ring-4 ring-[#fffdf9]/90 transition group-hover:scale-110 group-hover:bg-[#d4bc7a]">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <span
+              className={[
+                "flex items-center justify-center rounded-full bg-[#c9a962] text-[#0a0a0a] shadow-lg ring-4 ring-[#fffdf9]/90 transition group-hover:scale-110 group-hover:bg-[#d4bc7a]",
+                isFan ? "h-14 w-14 sm:h-[3.75rem] sm:w-[3.75rem]" : "h-16 w-16",
+              ].join(" ")}
+            >
+              <svg
+                className={isFan ? "h-6 w-6 sm:h-7 sm:w-7" : "h-7 w-7"}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden
+              >
                 <path d="M8 5v14l11-7L8 5z" />
               </svg>
             </span>
