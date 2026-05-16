@@ -13,13 +13,13 @@ export function PackagesSection() {
     },
     {
       title: "Engagements",
-      src: "/focus_on_main_and_upscal_202605162223.jpeg",
+      src: "/focus_on_main_and_upscale_202605162223.jpeg",
       alt: "Engagement floral styling",
       badge: "Engagements",
     },
     {
       title: "Events",
-      src: "/upscale_this_iamge_too_202605162237.jpeg",
+      src: "/upscale_this_image_too_202605162237.jpeg",
       alt: "Event floral styling",
       badge: "Events",
     },
@@ -79,7 +79,7 @@ export function PackagesSection() {
                 </div>
               ) : null}
               <div className="relative aspect-[3/4] w-full">
-                {tile.src ? (
+                <div className="relative aspect-[3/4] w-full">
                   <Image
                     src={tile.src}
                     alt={tile.alt}
@@ -87,13 +87,7 @@ export function PackagesSection() {
                     sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 30vw, (min-width: 640px) 48vw, 100vw"
                     className="object-cover"
                   />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-white via-[#fffdf9] to-[#f6f3ec]">
-                    <span className="px-6 text-center font-[family-name:var(--font-display)] text-sm font-semibold uppercase tracking-[0.22em] text-black/55">
-                      {tile.title}
-                    </span>
-                  </div>
-                )}
+                </div>
               </div>
             </motion.div>
           ))}
