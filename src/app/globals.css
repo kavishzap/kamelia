@@ -3,13 +3,15 @@
 @theme {
   --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-  --color-surface: #0a0a0a;
-  --color-surface-raised: #121212;
-  --color-surface-card: #161616;
+  /* Light theme tokens */
+  --color-surface: #ffffff;
+  --color-surface-raised: #fbfaf7;
+  --color-surface-card: #ffffff;
   --color-gold: #c9a962;
   --color-gold-soft: #d4bc7a;
-  --color-cream: #f5f0e8;
-  --color-muted: #9a948a;
+  /* "cream" is the primary text color token in this codebase */
+  --color-cream: #171717;
+  --color-muted: #5f5b54;
 }
 
 html {
@@ -24,5 +26,5 @@ body {
 
 ::selection {
   background-color: rgba(201, 169, 98, 0.45);
-  color: #0a0a0a;
+  color: #171717;
 }

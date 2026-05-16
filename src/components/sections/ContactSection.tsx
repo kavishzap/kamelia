@@ -7,7 +7,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative scroll-mt-24 bg-[#0a0a0a] px-4 py-24 sm:px-6 lg:px-8"
+      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-24 sm:px-6 lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
         <motion.div
@@ -15,18 +15,26 @@ export function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl"
+          className="mx-auto max-w-2xl text-center"
         >
-          <p className="font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.35em] text-[#c9a962]">
-            Begin your floral story
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold text-[#f5f0e8] sm:text-4xl">
-            Plan your event
-          </h2>
-          <p className="mt-4 max-w-md text-[#9a948a] sm:max-w-xl">
-            Share your date, venue, and inspiration — our studio replies within two business days with next steps and
-            availability. Complete the guided questionnaire below to build your decor brief.
-          </p>
+          <div className="text-center">
+            <p
+              className="text-[clamp(2rem,4.2vw,3.15rem)] leading-none text-black/80"
+              style={{
+                fontFamily:
+                  "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
+              }}
+            >
+              Begin your floral story
+            </p>
+            <h2 className="mt-3 text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-cream)] sm:text-sm">
+              Plan your event
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-[var(--color-muted)]">
+              Share your date, venue, and inspiration — our studio replies within two business days with next steps and
+              availability. Complete the guided questionnaire below to build your decor brief.
+            </p>
+          </div>
         </motion.div>
 
         <motion.div

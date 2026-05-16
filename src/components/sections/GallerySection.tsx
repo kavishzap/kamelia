@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { tiktokGalleryItems } from "@/data/tiktok-gallery";
 import { SOCIAL_LINKS } from "@/data/social-links";
 import { NorrisGalleryTile } from "@/components/gallery/NorrisGalleryTile";
@@ -15,15 +16,6 @@ async function fetchOembed(url: string): Promise<TikTokOEmbedResult | null> {
   } catch {
     return null;
   }
-}
-
-/** Vertical stagger — 1 col default, 2-col from `sm`, 4-col from `lg` */
-function staggerClass(index: number) {
-  const col4 = index % 4;
-  const col2 = index % 2;
-  const smPair = ["", "sm:mt-10"][col2];
-  const lg = ["lg:mt-0", "lg:mt-[4.75rem]", "lg:mt-10", "lg:mt-[4.75rem]"][col4];
-  return `${smPair} ${lg}`.trim();
 }
 
 export function GallerySection() {
@@ -52,6 +44,7 @@ export function GallerySection() {
       }
       setMetaById(next);
     })();
+
     return () => {
       cancelled = true;
     };
@@ -64,36 +57,46 @@ export function GallerySection() {
   const activeMeta = activeId ? metaById[activeId] : null;
 
   return (
-    <section
-      id="gallery"
-      className="relative scroll-mt-24 border-t border-white/[0.06] bg-black px-4 py-24 sm:px-6 lg:px-8"
-    >
+    <section id="gallery" className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1400px]">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-xs font-semibold uppercase tracking-[0.42em] text-[#c9a962]">
-              Portfolio
-            </p>
-            <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-[2.75rem]">
-              Gallery
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-white/55 sm:text-right md:max-w-lg md:pb-1 md:text-base">
-            Install films from our studio — tap a tile to watch in place. Same staggered grid energy as a pit-wall
-            board, finished in Kamelia noir and gold.
+        <div className="text-center">
+          <p
+            className="text-[clamp(2rem,4.2vw,3.15rem)] leading-none text-black/80"
+            style={{
+              fontFamily:
+                "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
+            }}
+          >
+            Wonderful gift
           </p>
+          <h2 className="mt-3 text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-cream)] sm:text-sm">
+            Gallery of work
+          </h2>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-16 lg:mt-16 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-24">
+        <div className="mt-12 grid grid-cols-2 gap-5 sm:mt-14 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 lg:gap-7">
           {tiktokGalleryItems.map((item, i) => (
-            <div key={item.id} className={staggerClass(i)}>
-              <NorrisGalleryTile
-                item={item}
-                index={i}
-                meta={metaById[item.id]}
-                onOpen={() => setActiveId(item.id)}
-              />
-            </div>
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.9, y: 18 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{
+                duration: 0.85,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.06 * Math.min(i, 10),
+              }}
+              className="min-w-0 will-change-transform"
+            >
+              <div className="aspect-square w-full">
+                <NorrisGalleryTile
+                  item={item}
+                  index={i}
+                  meta={metaById[item.id]}
+                  onOpen={() => setActiveId(item.id)}
+                />
+              </div>
+            </motion.div>
           ))}
         </div>
 
@@ -102,9 +105,18 @@ export function GallerySection() {
             href={SOCIAL_LINKS.tiktok}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex font-[family-name:var(--font-display)] text-sm font-semibold uppercase tracking-[0.22em] text-[#c9a962] underline decoration-[#c9a962]/55 decoration-1 underline-offset-[8px] transition hover:text-[#e8d9b4] hover:decoration-[#c9a962] sm:text-base"
+            className="inline-flex items-center gap-4 text-[clamp(2rem,4.2vw,3.15rem)] leading-none text-black/80"
+            style={{
+              fontFamily:
+                "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
+            }}
           >
-            View more
+            <span>Follow us on TikTok</span>
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/90 text-black/80 shadow-[0_12px_28px_-18px_rgba(0,0,0,0.45)]">
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+              </svg>
+            </span>
           </a>
         </div>
       </div>

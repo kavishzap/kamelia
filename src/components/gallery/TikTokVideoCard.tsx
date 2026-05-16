@@ -48,7 +48,7 @@ export function TikTokVideoCard({ item, index, meta, onOpen, variant = "default"
         type="button"
         onClick={onOpen}
         className={[
-          "relative w-full overflow-hidden border-2 border-[#e8d9b4]/90 bg-gradient-to-b from-[#fffdf9] to-[#f7f0e4] text-left shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)] ring-1 ring-[#c9a962]/25 transition hover:border-[#c9a962] hover:shadow-[0_28px_70px_-20px_rgba(201,169,98,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a962] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]",
+          "relative w-full overflow-hidden border-2 border-[#e8d9b4]/90 bg-gradient-to-b from-[#fffdf9] to-[#f7f0e4] text-left shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)] ring-1 ring-[#c9a962]/25 transition hover:border-[#c9a962] hover:shadow-[0_28px_70px_-20px_rgba(201,169,98,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a962] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
           isFan ? "rounded-[1.75rem] sm:rounded-[2rem]" : "rounded-2xl",
         ].join(" ")}
       >

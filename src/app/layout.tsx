@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
-  colorScheme: "dark",
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -33,7 +33,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`bg-[#0a0a0a] ${cormorant.variable} ${dmSans.variable}`}>
+    <html
+      lang="en"
+      className={`bg-[var(--color-surface)] ${cormorant.variable} ${dmSans.variable}`}
+    >
       <body className="antialiased">{children}</body>
     </html>
   );

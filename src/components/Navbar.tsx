@@ -16,10 +16,10 @@ const links = [
 function BrandLockup() {
   return (
     <div className="flex min-w-0 flex-col leading-tight">
-      <span className="font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-[#f5f0e8] sm:text-lg">
+      <span className="font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-[var(--color-cream)] sm:text-lg">
         Kamelia
       </span>
-      <span className="mt-0.5 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.2em] text-[#c9a962]/85 sm:text-[0.6875rem] sm:tracking-[0.24em]">
+      <span className="mt-0.5 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.2em] text-[var(--color-gold)]/85 sm:text-[0.6875rem] sm:tracking-[0.24em]">
         The Floral Designer
       </span>
     </div>
@@ -69,7 +69,7 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-[#0a0a0a]/90 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/[0.08] bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <Link
           href="/#home"
@@ -77,7 +77,7 @@ export function Navbar() {
           onClick={() => setOpen(false)}
         >
           <img
-            src="/logo_white.png"
+            src="/logo_black.png"
             alt=""
             width={720}
             height={240}
@@ -92,7 +92,7 @@ export function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm font-medium text-[#9a948a] transition-colors hover:text-[#c9a962]"
+              className="text-sm font-medium text-[var(--color-muted)] transition-colors hover:text-[var(--color-gold)]"
             >
               {l.label}
             </Link>
@@ -104,7 +104,7 @@ export function Navbar() {
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-[#141414] text-[#f5f0e8] lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-[var(--color-surface-raised)] text-[var(--color-cream)] lg:hidden"
             onClick={() => setOpen((v) => !v)}
           >
             <span className="sr-only">Menu</span>
@@ -136,7 +136,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[110] flex min-h-[100dvh] min-w-full flex-col bg-black lg:hidden"
+            className="fixed inset-0 z-[110] flex min-h-[100dvh] min-w-full flex-col bg-white lg:hidden"
           >
             <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:px-8">
               <Link
@@ -145,7 +145,7 @@ export function Navbar() {
                 onClick={() => setOpen(false)}
               >
                 <img
-                  src="/logo_white.png"
+                  src="/logo_black.png"
                   alt=""
                   width={720}
                   height={240}
@@ -157,7 +157,7 @@ export function Navbar() {
               <button
                 type="button"
                 aria-label="Close menu"
-                className="-mr-1 flex shrink-0 items-center justify-center p-2 text-[#c9a962] transition hover:text-[#d4bc7a]"
+                className="-mr-1 flex shrink-0 items-center justify-center p-2 text-[var(--color-gold)] transition hover:text-[var(--color-gold-soft)]"
                 onClick={() => setOpen(false)}
               >
                 <MenuCloseIcon />
@@ -170,7 +170,7 @@ export function Navbar() {
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-[#f5f0e8] transition hover:text-[#e8d9b4]"
+                    className="text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-[var(--color-cream)] transition hover:text-[var(--color-gold)]"
                     onClick={() => setOpen(false)}
                   >
                     {l.label}
@@ -178,9 +178,9 @@ export function Navbar() {
                 ))}
               </nav>
 
-              <div className="mt-12 h-px w-14 shrink-0 bg-[#c9a962] sm:mt-14" aria-hidden />
+              <div className="mt-12 h-px w-14 shrink-0 bg-[var(--color-gold)] sm:mt-14" aria-hidden />
 
-              <p className="mt-10 font-[family-name:var(--font-display)] text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[#c9a962]/90">
+              <p className="mt-10 font-[family-name:var(--font-display)] text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[var(--color-gold)]/90">
                 Follow
               </p>
               <SocialIcons className="mt-3" onNavigate={() => setOpen(false)} />

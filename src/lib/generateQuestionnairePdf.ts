@@ -125,7 +125,7 @@ export async function buildQuestionnairePdfBlob(
     "1. Event & venue",
     [
       `Event type: ${s.eventType || "—"}`,
-      `Date: ${s.eventDate || "—"}  Time: ${s.eventTime || "—"}`,
+      `Date: ${s.eventDate || "—"}`,
       `Venue: ${s.venueName || "—"}  Setting: ${s.venueSetting || "—"}  City/region: ${s.city || "—"}`,
       `Guest count: ${s.guestCount || "—"}`,
     ].join("\n"),
@@ -147,11 +147,8 @@ export async function buildQuestionnairePdfBlob(
 
   y = writeBlock(
     doc,
-    "3. Stage & decor",
-    [
-      `Stage type: ${s.stageType || "—"}`,
-      `Decor elements: ${s.decorElements.length ? s.decorElements.join(", ") : "—"}`,
-    ].join("\n"),
+    "3. Stage",
+    [`Stage type: ${s.stageType || "—"}`].join("\n"),
     y,
     pageW,
   );

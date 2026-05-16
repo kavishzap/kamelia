@@ -63,7 +63,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
           <button
             type="button"
             aria-label="Close gallery"
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/55 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -71,7 +71,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-[101] mx-auto w-full max-w-[min(300px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-[#0a0a0a] shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.65)] sm:max-h-[min(92dvh,820px)] sm:max-w-[420px]"
+            className="relative z-[101] mx-auto w-full max-w-[min(300px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-white shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.22)] sm:max-h-[min(92dvh,820px)] sm:max-w-[420px]"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -85,7 +85,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="absolute right-2 top-2 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#c9a962]/50 bg-[#0a0a0a]/90 text-[#f5f0e8] shadow-lg backdrop-blur-sm transition hover:border-[#c9a962] hover:bg-[#141414] sm:right-3 sm:top-3 sm:h-10 sm:w-10"
+              className="absolute right-2 top-2 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#c9a962]/50 bg-white/90 text-[var(--color-cream)] shadow-lg backdrop-blur-sm transition hover:border-[#c9a962] hover:bg-[var(--color-surface-raised)] sm:right-3 sm:top-3 sm:h-10 sm:w-10"
               aria-label="Close"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -93,13 +93,13 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
               </svg>
             </button>
 
-            <div className="relative w-full bg-black">
+            <div className="relative w-full bg-[var(--color-surface)]">
               {embedSrc ? (
-                <div className="relative mx-auto aspect-[9/16] w-full max-w-[min(300px,calc(100vw-2rem),calc((100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-5.5rem)*9/16))] sm:max-w-none sm:min-h-[420px]">
+                <div className="relative mx-auto aspect-square w-full max-w-[min(520px,calc(100vw-2rem),calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-5.5rem))] sm:max-w-none">
                   <iframe
                     title="TikTok video"
                     src={embedSrc}
-                    className="absolute inset-0 h-full w-full"
+                    className="absolute left-1/2 top-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2"
                     allow="encrypted-media; autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -107,10 +107,10 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
-                  <p className="font-[family-name:var(--font-display)] text-lg text-[#f5f0e8]">
+                  <p className="font-[family-name:var(--font-display)] text-lg text-[var(--color-cream)]">
                     Preview unavailable
                   </p>
-                  <p className="max-w-xs text-sm leading-relaxed text-[#9a948a]">
+                  <p className="max-w-xs text-sm leading-relaxed text-[var(--color-muted)]">
                     Open this clip on TikTok from your device.
                   </p>
                   <a
