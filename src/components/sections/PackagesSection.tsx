@@ -13,13 +13,13 @@ export function PackagesSection() {
     },
     {
       title: "Engagements",
-      src: "/focus_on_main_and_upscale_202605162223.jpeg",
+      src: "/main.jpeg",
       alt: "Engagement floral styling",
       badge: "Engagements",
     },
     {
       title: "Events",
-      src: "/upscale_this_image_too_202605162237.jpeg",
+      src: "/floral.jpeg",
       alt: "Event floral styling",
       badge: "Events",
     },

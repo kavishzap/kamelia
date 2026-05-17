@@ -5,9 +5,6 @@ export type QState = {
   eventDate: string;
   venueName: string;
   venueSetting: string;
-  city: string;
-  guestCount: string;
-  themeStyle: string;
   colors: string[];
   floralPrefs: string[];
   stageType: string;

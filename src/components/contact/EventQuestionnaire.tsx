@@ -7,9 +7,7 @@ import {
   COLOR_SWATCHES,
   EVENT_TYPES,
   FLORAL_PREFS,
-  GUEST_RANGES,
   STAGE_TYPES,
-  THEME_STYLES,
   VENUE_SETTINGS,
 } from "@/data/event-questionnaire";
 import type { QState } from "@/data/questionnaire-q-state";
@@ -26,9 +24,6 @@ const initialState: QState = {
   eventDate: "",
   venueName: "",
   venueSetting: "",
-  city: "",
-  guestCount: "",
-  themeStyle: "",
   colors: [],
   floralPrefs: [],
   stageType: "",
@@ -43,20 +38,13 @@ const initialState: QState = {
 
 const STEPS = [
   { id: 0, title: "Event & venue", short: "Event" },
-  { id: 1, title: "Design style", short: "Design" },
-  { id: 2, title: "Stage & decor", short: "Stage" },
-  { id: 3, title: "Budget & ideas", short: "Budget" },
-  { id: 4, title: "Your details", short: "Contact" },
+  { id: 1, title: "Design & decor", short: "Design" },
+  { id: 2, title: "Budget & contact", short: "Contact" },
 ] as const;
 
 function estimateRs(s: QState): number {
   let n = 22_500;
   if (s.eventType) n += 4_200;
-  if (s.guestCount === "50–100") n += 6_500;
-  if (s.guestCount === "100–200") n += 14_000;
-  if (s.guestCount === "200–500") n += 28_000;
-  if (s.guestCount === "500+") n += 48_000;
-  if (s.themeStyle) n += 8_800;
   n += s.colors.length * 950;
   n += s.floralPrefs.length * 2_400;
   if (s.stageType) n += 6_200;
@@ -150,12 +138,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
     const lines: { label: string; amount: number }[] = [];
     lines.push({ label: "Studio base & on-site coordination", amount: 22_500 });
     if (s.eventType) lines.push({ label: `Event type · ${s.eventType}`, amount: 4_200 });
-    if (s.guestCount === "50–100") lines.push({ label: `Guest scale · ${s.guestCount}`, amount: 6_500 });
-    if (s.guestCount === "100–200") lines.push({ label: `Guest scale · ${s.guestCount}`, amount: 14_000 });
-    if (s.guestCount === "200–500") lines.push({ label: `Guest scale · ${s.guestCount}`, amount: 28_000 });
-    if (s.guestCount === "500+") lines.push({ label: `Guest scale · ${s.guestCount}`, amount: 48_000 });
     if (s.venueSetting === "Outdoor") lines.push({ label: "Outdoor logistics & wind plan", amount: 5_500 });
-    if (s.themeStyle) lines.push({ label: `Theme direction · ${s.themeStyle}`, amount: 8_800 });
     if (s.colors.length) lines.push({ label: `Palette (${s.colors.length} tones)`, amount: s.colors.length * 950 });
     if (s.floralPrefs.length) lines.push({ label: `Floral scope (${s.floralPrefs.length})`, amount: s.floralPrefs.length * 2_400 });
     if (s.stageType) lines.push({ label: `Stage · ${s.stageType}`, amount: 6_200 });
@@ -290,14 +273,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                           placeholder="Venue name"
                           value={s.venueName}
                           onChange={(e) => patch("venueName", e.target.value)}
-                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
-                        />
-                        <input
-                          type="text"
-                          placeholder="City / region"
-                          value={s.city}
-                          onChange={(e) => patch("city", e.target.value)}
-                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
+                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40 sm:col-span-2"
                         />
                       </div>
                       <p className="mt-3 text-xs text-[var(--color-muted)]">Indoor / outdoor</p>
@@ -313,34 +289,14 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                         ))}
                       </div>
                     </div>
-                    <div>
-                      <FieldLabel hint="How many guests are expected?">4. Estimated guest count</FieldLabel>
-                      <div className="flex flex-wrap gap-2">
-                        {GUEST_RANGES.map((g) => (
-                          <ChoiceCard key={g} selected={s.guestCount === g} onClick={() => patch("guestCount", g)}>
-                            {g}
-                          </ChoiceCard>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 )}
 
                 {step === 1 && (
                   <div className="space-y-8">
                     <div>
-                      <FieldLabel hint="What style do you want?">5. Preferred theme style</FieldLabel>
-                      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        {THEME_STYLES.map((t) => (
-                          <ChoiceCard key={t} selected={s.themeStyle === t} onClick={() => patch("themeStyle", t)}>
-                            {t}
-                          </ChoiceCard>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
                       <FieldLabel hint="What colors would you like? Multi-select — hex is shown under each swatch.">
-                        6. Color palette
+                        4. Color palette
                       </FieldLabel>
                       <div className="flex flex-wrap gap-3">
                         {COLOR_SWATCHES.map((c) => {
@@ -379,7 +335,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                       </div>
                     </div>
                     <div>
-                      <FieldLabel hint="What floral style do you prefer?">6. Floral preference</FieldLabel>
+                      <FieldLabel hint="What floral style do you prefer?">5. Floral preference</FieldLabel>
                       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                         {FLORAL_PREFS.map((f) => (
                           <ChoiceCard
@@ -392,13 +348,8 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                         ))}
                       </div>
                     </div>
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <div className="space-y-8">
                     <div>
-                      <FieldLabel hint="What kind of stage setup do you want?">7. Stage type</FieldLabel>
+                      <FieldLabel hint="What kind of stage setup do you want?">6. Stage type</FieldLabel>
                       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                         {STAGE_TYPES.map((t) => (
                           <ChoiceCard key={t} selected={s.stageType === t} onClick={() => patch("stageType", t)}>
@@ -410,10 +361,10 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                   </div>
                 )}
 
-                {step === 3 && (
+                {step === 2 && (
                   <div className="space-y-8">
                     <div>
-                      <FieldLabel hint="What is your estimated decor budget?">9. Budget range</FieldLabel>
+                      <FieldLabel hint="What is your estimated decor budget?">7. Budget range</FieldLabel>
                       <div className="grid gap-2 sm:grid-cols-2">
                         {BUDGET_RANGES.map((b) => (
                           <ChoiceCard key={b} selected={s.budget === b} onClick={() => patch("budget", b)}>
@@ -423,9 +374,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                       </div>
                     </div>
                     <div>
-                      <FieldLabel hint="Paste TikTok, Pinterest, or Instagram links — one per line">
-                        10. Inspiration links
-                      </FieldLabel>
+                      <FieldLabel hint="Paste TikTok, Pinterest, or Instagram links ?? one per line">8. Inspiration links</FieldLabel>
                       <textarea
                         rows={4}
                         value={s.inspirationLinks}
@@ -435,83 +384,73 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                       />
                     </div>
                     <div>
-                      <FieldLabel hint="Special requests, favourite flowers, cultural notes…">
-                        11. Additional notes
-                      </FieldLabel>
+                      <FieldLabel hint="Special requests, favourite flowers, cultural notes??">9. Additional notes</FieldLabel>
                       <textarea
                         rows={5}
                         value={s.notes}
                         onChange={(e) => patch("notes", e.target.value)}
                         className="w-full resize-y rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
-                        placeholder="Tell us more about your dream setup…"
+                        placeholder="Tell us more about your dream setup??"
                       />
+                    </div>
+
+                    <div className="space-y-6">
+                      <FieldLabel>10. Contact information</FieldLabel>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <input
+                          required
+                          type="text"
+                          placeholder="Full name *"
+                          value={s.fullName}
+                          onChange={(e) => patch("fullName", e.target.value)}
+                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40 sm:col-span-2"
+                        />
+                        <input
+                          type="tel"
+                          placeholder="Phone number"
+                          value={s.phone}
+                          onChange={(e) => patch("phone", e.target.value)}
+                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
+                        />
+                        <input
+                          type="tel"
+                          placeholder="WhatsApp number"
+                          value={s.whatsapp}
+                          onChange={(e) => patch("whatsapp", e.target.value)}
+                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
+                        />
+                        <input
+                          required
+                          type="email"
+                          placeholder="Email address *"
+                          value={s.email}
+                          onChange={(e) => patch("email", e.target.value)}
+                          className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40 sm:col-span-2"
+                        />
+                      </div>
+                      <div className="rounded-xl border border-black/[0.08] bg-[var(--color-surface-raised)] px-4 py-3 text-sm text-[var(--color-muted)]">
+                        <p className="font-medium text-[#e8d9b4]">Send in 2 steps</p>
+                        <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-xs leading-relaxed sm:text-sm">
+                          <li>Generate the PDF (it downloads to your device).</li>
+                          <li>Open WhatsApp and attach the PDF (paperclip ? Document).</li>
+                        </ol>
+                      </div>
+                      {pdfError ? (
+                        <p className="rounded-xl border border-red-500/35 bg-red-500/10 px-4 py-2 text-sm text-red-200/90">
+                          {pdfError}
+                        </p>
+                      ) : null}
+                      {pdfReady ? (
+                        <p className="rounded-xl border border-[#c9a962]/40 bg-[#c9a962]/10 px-4 py-3 text-sm text-[#e8d9b4]">
+                          PDF ready ?? if the download didn&apos;t start, generate again. When you send on WhatsApp,
+                          remember to attach <span className="font-mono text-[var(--color-cream)]">{defaultPdfFilename()}</span>.
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 )}
 
-                {step === 4 && (
-                  <div className="space-y-6">
-                    <FieldLabel>12. Contact information</FieldLabel>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <input
-                        required
-                        type="text"
-                        placeholder="Full name *"
-                        value={s.fullName}
-                        onChange={(e) => patch("fullName", e.target.value)}
-                        className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40 sm:col-span-2"
-                      />
-                      <input
-                        type="tel"
-                        placeholder="Phone number"
-                        value={s.phone}
-                        onChange={(e) => patch("phone", e.target.value)}
-                        className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
-                      />
-                      <input
-                        type="tel"
-                        placeholder="WhatsApp number"
-                        value={s.whatsapp}
-                        onChange={(e) => patch("whatsapp", e.target.value)}
-                        className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40"
-                      />
-                      <input
-                        required
-                        type="email"
-                        placeholder="Email *"
-                        value={s.email}
-                        onChange={(e) => patch("email", e.target.value)}
-                        className="rounded-xl border border-black/[0.12] bg-white px-4 py-3 text-sm text-[var(--color-cream)] placeholder:text-black/40 focus:ring-2 focus:ring-[#c9a962]/40 sm:col-span-2"
-                      />
-                    </div>
-                    <div className="rounded-xl border border-black/[0.08] bg-[var(--color-surface-raised)] px-4 py-3 text-sm text-[var(--color-muted)]">
-                      <p className="font-medium text-[#e8d9b4]">Finish in two steps</p>
-                      <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-xs leading-relaxed sm:text-sm">
-                        <li>
-                          Tap <span className="text-[#c9a962]">Generate my vision</span> — your answers download as a
-                          PDF (check your Downloads folder).
-                        </li>
-                        <li>
-                          Tap <span className="text-[#c9a962]">Send this PDF to Kamelia</span> — WhatsApp opens. Use
-                          the <strong className="text-[var(--color-cream)]">paperclip</strong> →{" "}
-                          <strong className="text-[var(--color-cream)]">Document</strong> and choose that PDF before you send.
-                        </li>
-                      </ol>
-                    </div>
-                    {pdfError ? (
-                      <p className="rounded-xl border border-red-500/35 bg-red-500/10 px-4 py-2 text-sm text-red-200/90">
-                        {pdfError}
-                      </p>
-                    ) : null}
-                    {pdfReady ? (
-                      <p className="rounded-xl border border-[#c9a962]/40 bg-[#c9a962]/10 px-4 py-3 text-sm text-[#e8d9b4]">
-                        PDF ready — if the download didn&apos;t start, generate again. When you send on WhatsApp,
-                        remember to attach <span className="font-mono text-[var(--color-cream)]">{defaultPdfFilename()}</span>.
-                      </p>
-                    ) : null}
-                  </div>
-                )}
-                </motion.div>
+                                </motion.div>
               </AnimatePresence>
             </div>
 
