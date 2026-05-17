@@ -30,6 +30,7 @@ export function PortfolioGridClient({ images }: { images: PortfolioImage[] }) {
               src={img.src}
               alt={img.alt}
               fill
+              loading="lazy"
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover"
             />

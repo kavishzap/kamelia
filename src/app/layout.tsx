@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "Kamelia — The Floral Designer",
   description:
     "Luxury floral styling for weddings, engagements, mandaps, and unforgettable events.",
+  icons: {
+    icon: [{ url: "/logo_black.png", type: "image/png" }],
+    shortcut: "/logo_black.png",
+    apple: "/logo_black.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -37,6 +42,10 @@ export default function RootLayout({
       lang="en"
       className={`bg-[var(--color-surface)] ${cormorant.variable} ${dmSans.variable}`}
     >
+      <head>
+        <link rel="preload" href="/logo_black.png" as="image" type="image/png" />
+        <link rel="preload" href="/herovideo.mp4" as="video" type="video/mp4" />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );

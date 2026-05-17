@@ -9,17 +9,17 @@ export function HeroScroll() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden bg-[var(--color-surface)]"
+      className="relative overflow-hidden bg-black"
       aria-label="Hero"
     >
-      <div className="relative min-h-[min(92vh,860px)] w-full">
+      <div className="relative h-[100dvh] w-full lg:h-auto lg:min-h-[min(92vh,860px)]">
         <video
           src="/herovideo.mp4"
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
         />
 
@@ -29,7 +29,7 @@ export function HeroScroll() {
           aria-hidden
         />
 
-        <div className="absolute inset-0 flex items-center justify-start px-2 py-16 pt-24 sm:px-4 sm:pt-28 lg:px-6">
+        <div className="absolute inset-0 flex items-center justify-start px-4 py-16 pt-[max(5.5rem,env(safe-area-inset-top)+4.25rem)] sm:px-6 sm:pt-28 lg:px-8">
           <div className="mx-auto w-full max-w-[1520px]">
           <motion.article
             initial={reduceMotion ? false : { opacity: 0, y: 14 }}
@@ -37,19 +37,13 @@ export function HeroScroll() {
             transition={{ duration: 0.55 }}
             className="pointer-events-auto w-full max-w-xl px-1 text-left sm:max-w-2xl sm:px-2"
           >
-            <p
-              className="text-[clamp(3.25rem,7vw,5.25rem)] font-semibold leading-[0.92] tracking-tight text-white"
-              style={{
-                fontFamily:
-                  "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
-              }}
-            >
+            <p className="font-[family-name:var(--font-display)] text-[clamp(2.25rem,4.5vw,3.75rem)] font-semibold leading-tight text-white">
               Kamelia
             </p>
-            <p className="mt-4 font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.4em] text-white/90 sm:text-base">
+            <p className="mt-3 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.28em] text-white/95 sm:mt-4 sm:text-xs sm:tracking-[0.32em]">
               The Floral Designer
             </p>
-            <h1 className="mt-6 max-w-xl font-[family-name:var(--font-display)] text-[clamp(1.9rem,3.4vw,2.75rem)] font-semibold leading-snug text-white">
+            <h1 className="mt-5 max-w-xl font-[family-name:var(--font-display)] text-[clamp(1.35rem,2.5vw,2rem)] font-semibold leading-snug text-white sm:mt-6">
               Luxury Floral Styling for Unforgettable Events
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/80 sm:text-lg">

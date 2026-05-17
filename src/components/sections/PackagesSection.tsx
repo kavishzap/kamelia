@@ -84,6 +84,7 @@ export function PackagesSection() {
                     src={tile.src}
                     alt={tile.alt}
                     fill
+                    loading="lazy"
                     sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 30vw, (min-width: 640px) 48vw, 100vw"
                     className="object-cover"
                   />

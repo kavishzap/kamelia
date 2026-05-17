@@ -88,14 +88,12 @@ export function GallerySection() {
               }}
               className="min-w-0 will-change-transform"
             >
-              <div className="aspect-square w-full">
-                <NorrisGalleryTile
-                  item={item}
-                  index={i}
-                  meta={metaById[item.id]}
-                  onOpen={() => setActiveId(item.id)}
-                />
-              </div>
+              <NorrisGalleryTile
+                item={item}
+                index={i}
+                meta={metaById[item.id]}
+                onOpen={() => setActiveId(item.id)}
+              />
             </motion.div>
           ))}
         </div>

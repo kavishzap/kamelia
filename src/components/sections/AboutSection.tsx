@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -51,9 +51,10 @@ export function AboutSection() {
           >
             <div className="relative aspect-[5/4] w-full">
               <Image
-                src="/wedding .jpg"
+                src="/wedding.jpg"
                 alt="Kamelia wedding floral design"
                 fill
+                loading="lazy"
                 sizes="(min-width: 768px) 420px, 92vw"
                 className="object-cover"
               />

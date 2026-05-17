@@ -1,54 +1,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { SocialIcons } from "@/components/SocialIcons";
+import { siteNavLinks } from "@/data/site-nav";
 
-const links = [
-  { href: "/#home", label: "Home" },
-  { href: "/#packages", label: "Packages" },
-  { href: "/#gallery", label: "Gallery" },
-  { href: "/#about", label: "About" },
-  { href: "/#contact", label: "Plan your event" },
-];
+const sectionPadding = "px-4 sm:px-6 lg:px-8";
+const contentMax = "mx-auto max-w-[1400px]";
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
+const menuBackdrop = {
+  closed: { opacity: 0 },
+  open: { opacity: 1 },
+};
+
+const menuPanel = {
+  closed: { opacity: 0, y: -12 },
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.38, ease: easeOut, staggerChildren: 0.07, delayChildren: 0.06 },
+  },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.22, ease: easeOut } },
+};
+
+const menuItem = {
+  closed: { opacity: 0, y: 14 },
+  open: { opacity: 1, y: 0, transition: { duration: 0.32, ease: easeOut } },
+};
 
 function BrandLockup() {
   return (
-    <div className="flex min-w-0 flex-col leading-tight">
-      <span className="font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-[var(--color-cream)] sm:text-lg">
+    <div className="flex min-w-0 flex-col justify-center leading-tight">
+      <span className="font-[family-name:var(--font-display)] text-lg font-semibold text-black sm:text-xl">
         Kamelia
       </span>
-      <span className="mt-0.5 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.2em] text-[var(--color-gold)]/85 sm:text-[0.6875rem] sm:tracking-[0.24em]">
+      <span className="mt-1 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.28em] text-black sm:text-xs sm:tracking-[0.32em]">
         The Floral Designer
       </span>
     </div>
   );
 }
 
-/** Thin gold X — matches minimal full-screen menu reference */
-function MenuCloseIcon({ className }: { className?: string }) {
+function HamburgerIcon({ open, reduceMotion }: { open: boolean; reduceMotion: boolean | null }) {
+  const transition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.32, ease: easeOut };
+
   return (
-    <svg
-      className={className}
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M5 5L27 27M27 5L5 27"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
+    <div className="relative flex h-6 w-6 items-center justify-center" aria-hidden>
+      <motion.span
+        className="absolute h-[2px] w-6 rounded-full bg-black"
+        initial={false}
+        animate={open ? { rotate: 45, y: 0 } : { rotate: 0, y: -7 }}
+        transition={transition}
       />
-    </svg>
+      <motion.span
+        className="absolute h-[2px] w-6 rounded-full bg-black"
+        initial={false}
+        animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 0.2, ease: easeOut }}
+      />
+      <motion.span
+        className="absolute h-[2px] w-6 rounded-full bg-black"
+        initial={false}
+        animate={open ? { rotate: -45, y: 0 } : { rotate: 0, y: 7 }}
+        transition={transition}
+      />
+    </div>
   );
 }
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -68,126 +95,124 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const closeMenu = () => setOpen(false);
+  const toggleMenu = () => setOpen((v) => !v);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/[0.08] bg-white/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-        <Link
-          href="/#home"
-          className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3"
-          onClick={() => setOpen(false)}
-        >
-          <img
-            src="/logo_black.png"
-            alt=""
-            width={720}
-            height={240}
-            decoding="async"
-            className="h-9 w-auto shrink-0 object-contain object-left sm:h-10"
-          />
-          <BrandLockup />
-        </Link>
-
-        <nav className="hidden flex-1 justify-center gap-7 lg:flex xl:gap-9">
-          {links.map((l) => (
+    <>
+      <header
+        className={[
+          "fixed inset-x-0 top-0 z-[120] border-b transition-[background-color,box-shadow,border-color] duration-300 lg:border-black/[0.08]",
+          open
+            ? "border-transparent bg-white shadow-[0_8px_30px_-12px_rgba(0,0,0,0.18)]"
+            : "border-black/[0.08] bg-white/85 backdrop-blur-md",
+        ].join(" ")}
+      >
+        <div className={`${contentMax} ${sectionPadding}`}>
+          <div className="flex items-center gap-4 py-3.5">
             <Link
-              key={l.href}
-              href={l.href}
-              className="text-sm font-medium text-[var(--color-muted)] transition-colors hover:text-[var(--color-gold)]"
+              href="/#home"
+              className="flex min-w-0 shrink-0 items-center gap-3 sm:gap-3.5"
+              onClick={closeMenu}
             >
-              {l.label}
+              <img
+                src="/logo_black.png"
+                alt=""
+                width={720}
+                height={240}
+                decoding="async"
+                className="h-11 w-auto shrink-0 object-contain object-left sm:h-12"
+              />
+              <BrandLockup />
             </Link>
-          ))}
-        </nav>
 
-        <div className="ml-auto flex items-center gap-3">
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-[var(--color-surface-raised)] text-[var(--color-cream)] lg:hidden"
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span className="sr-only">Menu</span>
-            <div className="flex flex-col gap-1.5">
-              <motion.span
-                animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                className="block h-0.5 w-5 bg-current"
-              />
-              <motion.span
-                animate={open ? { opacity: 0 } : { opacity: 1 }}
-                className="block h-0.5 w-5 bg-current"
-              />
-              <motion.span
-                animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-                className="block h-0.5 w-5 bg-current"
-              />
-            </div>
-          </button>
+            <nav className="ml-auto hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Main">
+              {siteNavLinks.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="whitespace-nowrap text-sm font-medium text-[var(--color-muted)] transition-colors hover:text-[var(--color-gold)]"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+
+            <button
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              className="relative z-[130] ml-auto inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-sm transition hover:border-black/20 hover:bg-[var(--color-surface-raised)] lg:hidden"
+              onClick={toggleMenu}
+            >
+              <HamburgerIcon open={open} reduceMotion={reduceMotion} />
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
       <AnimatePresence>
-        {open && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Site menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[110] flex min-h-[100dvh] min-w-full flex-col bg-white lg:hidden"
-          >
-            <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:px-8">
-              <Link
-                href="/#home"
-                className="flex min-w-0 flex-1 items-center gap-3 py-1"
-                onClick={() => setOpen(false)}
-              >
-                <img
-                  src="/logo_black.png"
-                  alt=""
-                  width={720}
-                  height={240}
-                  decoding="async"
-                  className="h-11 w-auto shrink-0 object-contain object-left sm:h-12"
-                />
-                <BrandLockup />
-              </Link>
-              <button
-                type="button"
-                aria-label="Close menu"
-                className="-mr-1 flex shrink-0 items-center justify-center p-2 text-[var(--color-gold)] transition hover:text-[var(--color-gold-soft)]"
-                onClick={() => setOpen(false)}
-              >
-                <MenuCloseIcon />
-              </button>
-            </div>
+        {open ? (
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              className="fixed inset-0 z-[100] bg-black/25 lg:hidden"
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={menuBackdrop}
+              transition={{ duration: reduceMotion ? 0 : 0.28, ease: easeOut }}
+              onClick={closeMenu}
+            />
 
-            <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-2">
-              <nav className="flex w-full max-w-md flex-col items-center gap-8 sm:gap-10">
-                {links.map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    className="text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-[var(--color-cream)] transition hover:text-[var(--color-gold)]"
-                    onClick={() => setOpen(false)}
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-              </nav>
+            <motion.div
+              id="mobile-nav"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site menu"
+              className="fixed inset-x-0 bottom-0 top-[4.35rem] z-[110] flex flex-col overflow-hidden bg-white lg:hidden"
+              initial="closed"
+              animate="open"
+              exit="exit"
+              variants={menuPanel}
+            >
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-6">
+                <nav className="flex w-full max-w-md flex-col items-center gap-7 sm:gap-9" aria-label="Main">
+                  {siteNavLinks.map((l) => (
+                    <motion.div key={l.href} variants={menuItem}>
+                      <Link
+                        href={l.href}
+                        className="block text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-black transition hover:text-[var(--color-gold)]"
+                        onClick={closeMenu}
+                      >
+                        {l.label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
 
-              <div className="mt-12 h-px w-14 shrink-0 bg-[var(--color-gold)] sm:mt-14" aria-hidden />
+                <motion.div variants={menuItem} className="mt-12 h-px w-14 shrink-0 bg-[var(--color-gold)] sm:mt-14" aria-hidden />
 
-              <p className="mt-10 font-[family-name:var(--font-display)] text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[var(--color-gold)]/90">
-                Follow
-              </p>
-              <SocialIcons className="mt-3" onNavigate={() => setOpen(false)} />
-            </div>
-          </motion.div>
-        )}
+                <motion.p
+                  variants={menuItem}
+                  className="mt-10 font-[family-name:var(--font-display)] text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[var(--color-gold)]"
+                >
+                  Follow
+                </motion.p>
+                <motion.div variants={menuItem}>
+                  <SocialIcons
+                    className="mt-3"
+                    onNavigate={closeMenu}
+                    platforms={["instagram", "tiktok"]}
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        ) : null}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

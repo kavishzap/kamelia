@@ -71,7 +71,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-[101] mx-auto w-full max-w-[min(300px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-white shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.22)] sm:max-h-[min(92dvh,820px)] sm:max-w-[420px]"
+            className="relative z-[101] mx-auto w-full max-w-[min(420px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-white shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.22)]"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -95,11 +95,11 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
 
             <div className="relative w-full bg-[var(--color-surface)]">
               {embedSrc ? (
-                <div className="relative mx-auto aspect-square w-full max-w-[min(520px,calc(100vw-2rem),calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-5.5rem))] sm:max-w-none">
+                <div className="relative mx-auto aspect-[9/16] h-auto w-full max-h-[min(calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-3rem),calc((min(420px,100vw-2rem))*16/9))] max-w-[min(420px,calc(100vw-2rem))]">
                   <iframe
                     title="TikTok video"
                     src={embedSrc}
-                    className="absolute left-1/2 top-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2"
+                    className="absolute inset-0 h-full w-full border-0"
                     allow="encrypted-media; autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -111,16 +111,8 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
                     Preview unavailable
                   </p>
                   <p className="max-w-xs text-sm leading-relaxed text-[var(--color-muted)]">
-                    Open this clip on TikTok from your device.
+                    This clip could not be loaded. Try again later or use the link under the gallery tile.
                   </p>
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center justify-center rounded-full border border-[#c9a962] bg-[#c9a962]/10 px-5 py-2.5 text-sm font-semibold text-[#c9a962] transition hover:bg-[#c9a962]/20"
-                  >
-                    View on TikTok
-                  </a>
                 </div>
               )}
             </div>

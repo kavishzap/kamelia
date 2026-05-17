@@ -1,3 +1,4 @@
+import { SiteLoader } from "@/components/SiteLoader";
 import { Navbar } from "@/components/Navbar";
 import { HeroScroll } from "@/components/HeroScroll";
 import { Footer } from "@/components/Footer";
@@ -9,15 +10,17 @@ import { ContactSection } from "@/components/sections/ContactSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
-      <Navbar />
-      <HeroScroll />
-      <PackagesSection />
-      <PortfolioSection />
-      <GallerySection />
-      <AboutSection />
-      <ContactSection />
-      <Footer />
-    </main>
+    <SiteLoader>
+      <main className="min-h-screen bg-[var(--color-surface)]">
+        <Navbar />
+        <HeroScroll />
+        <PackagesSection />
+        <PortfolioSection />
+        <GallerySection />
+        <AboutSection />
+        <ContactSection />
+        <Footer />
+      </main>
+    </SiteLoader>
   );
 }

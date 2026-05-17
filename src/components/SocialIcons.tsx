@@ -4,7 +4,7 @@ type Props = {
   className?: string;
   /** Close mobile menu when a link is tapped */
   onNavigate?: () => void;
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "white";
   platforms?: Array<"facebook" | "instagram" | "tiktok">;
 };
 
@@ -15,9 +15,11 @@ export function SocialIcons({
   platforms = ["facebook", "instagram", "tiktok"],
 }: Props) {
   const iconWrap =
-    variant === "dark"
-      ? "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-[var(--color-gold)] transition hover:border-[var(--color-gold)]/60 hover:bg-white/5 hover:text-[var(--color-gold-soft)]"
-      : "inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 text-black/80 transition hover:border-black/25 hover:bg-black/5 hover:text-black";
+    variant === "white"
+      ? "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:border-white/50 hover:bg-white/10"
+      : variant === "dark"
+        ? "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-[var(--color-gold)] transition hover:border-[var(--color-gold)]/60 hover:bg-white/5 hover:text-[var(--color-gold-soft)]"
+        : "inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 text-black/80 transition hover:border-black/25 hover:bg-black/5 hover:text-black";
 
   return (
     <div className={`flex flex-wrap items-center justify-center gap-3 ${className}`.trim()}>
