@@ -17,6 +17,7 @@ import {
 } from "@/data/event-questionnaire";
 import type { QState } from "@/data/questionnaire-q-state";
 import { KAMELIA_PHONE_DISPLAY, kameliaTelHref, kameliaWhatsAppHref } from "@/data/contact";
+import { btnPrimaryClass, btnSecondaryClass } from "@/lib/button-classes";
 import {
   buildQuestionnairePdfBlob,
   buildWhatsappSendPdfHref,
@@ -561,7 +562,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                       <button
                         type="button"
                         onClick={openWhatsappWithPdf}
-                        className="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-full border border-black/20 bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+                        className={`mt-3 ${btnSecondaryClass}`}
                       >
                         Send to Kamelia on WhatsApp
                       </button>
@@ -953,7 +954,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                 type="button"
                 disabled={step === 0}
                 onClick={() => goToStep(step - 1)}
-                className="inline-flex min-h-[44px] items-center justify-center border border-black/15 bg-white px-6 py-2.5 text-sm font-semibold text-black shadow-sm ring-1 ring-black/5 transition hover:border-black/25 disabled:cursor-not-allowed disabled:opacity-40"
+                className={`${btnSecondaryClass} disabled:opacity-40`}
               >
                 Back
               </button>
@@ -962,7 +963,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                 <button
                   type="button"
                   onClick={handleContinue}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[var(--color-gold)] px-8 py-2.5 text-sm font-semibold text-black shadow-[0_12px_34px_-16px_rgba(0,0,0,0.45)] transition hover:bg-[var(--color-gold-soft)]"
+                  className={btnPrimaryClass}
                 >
                   Continue
                 </button>
@@ -972,7 +973,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                     type="button"
                     disabled={pdfLoading}
                     onClick={() => void handleGenerateVision()}
-                    className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[var(--color-gold)] px-8 py-3 text-sm font-semibold text-black shadow-[0_12px_34px_-16px_rgba(0,0,0,0.45)] transition hover:bg-[var(--color-gold-soft)] disabled:cursor-not-allowed disabled:opacity-55"
+                    className={btnPrimaryClass}
                   >
                     {pdfLoading ? "Generating…" : "Generate my vision"}
                   </button>
@@ -980,7 +981,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                     type="button"
                     disabled={!pdfReady || !submittedContact}
                     onClick={openWhatsappWithPdf}
-                    className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-black/20 bg-white px-8 py-3 text-sm font-semibold text-black transition hover:border-[var(--color-gold)] hover:text-[var(--color-gold)] disabled:cursor-not-allowed disabled:opacity-45"
+                    className={`${btnSecondaryClass} px-8`}
                   >
                     Send to Kamelia on WhatsApp
                   </button>

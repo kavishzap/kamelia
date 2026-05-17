@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { btnHeroOutlineClass, btnPrimaryClass } from "@/lib/button-classes";
 import { motion, useReducedMotion } from "framer-motion";
 
 export function HeroScroll() {
@@ -53,13 +54,13 @@ export function HeroScroll() {
             <div className="mt-9 flex flex-wrap items-center justify-start gap-3 sm:gap-4">
               <Link
                 href="/#contact"
-                className="inline-flex min-h-[44px] min-w-[160px] items-center justify-center rounded-full bg-[#c9a962] px-8 py-3 text-sm font-semibold text-black shadow-[0_12px_34px_-16px_rgba(0,0,0,0.55)] transition hover:bg-[#d4bc7a]"
+                className={`${btnPrimaryClass} min-w-[160px] px-8 py-3`}
               >
                 Plan Your Event
               </Link>
               <Link
                 href="/#gallery"
-                className="inline-flex min-h-[44px] min-w-[160px] items-center justify-center rounded-full border border-white/70 bg-transparent px-8 py-3 text-sm font-semibold text-white shadow-[0_10px_28px_-18px_rgba(0,0,0,0.55)] transition hover:border-white hover:bg-white/10"
+                className={`${btnHeroOutlineClass} min-w-[160px] py-3`}
               >
                 View Gallery
               </Link>

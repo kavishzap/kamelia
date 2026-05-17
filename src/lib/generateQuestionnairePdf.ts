@@ -350,15 +350,6 @@ function drawColorPalette(doc: jsPDF, colorIds: string[], y: number, pageW: numb
   return (col === 0 ? rowY : rowY + rowH) + LINE * 0.5;
 }
 
-function drawSubheadingAt(doc: jsPDF, title: string, x: number, y: number) {
-  y = ensureSpace(doc, y, LINE * 2);
-  setText(doc, THEME.muted);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.5);
-  doc.text(title.toUpperCase(), x, y);
-  return y + LINE * 0.9;
-}
-
 function drawMultilineBlockAt(
   doc: jsPDF,
   label: string,
@@ -367,58 +358,58 @@ function drawMultilineBlockAt(
   y: number,
   width: number,
 ) {
-  y = drawSubheadingAt(doc, label, x, y);
+  const trimmed = body.trim();
+  if (!trimmed) return y;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  const lines = doc.splitTextToSize(trimmed, width);
+  y = ensureSpace(doc, y, LINE * 2);
+
+  setText(doc, THEME.muted);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.text(label.toUpperCase(), x, y);
+  y += LINE * 0.9;
+
   setText(doc, THEME.text);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  const lines = doc.splitTextToSize(body.trim() || "—", width);
   for (const line of lines) {
     y = ensureSpace(doc, y, LINE);
     doc.text(line, x, y);
-    y += LINE * 0.92;
+    y += LINE * 0.88;
   }
-  return y + LINE * 0.5;
+  return y + LINE * 0.35;
 }
 
 function drawBudgetVisionSection(doc: jsPDF, s: QState, y: number, pageW: number) {
   y = drawSectionTitle(doc, "Budget & vision", y);
   y = drawField(doc, "Budget range", s.budget, y, pageW);
 
-  const colW = (CONTENT_W - 6) / 2;
-  const leftX = MARGIN;
-  const rightX = MARGIN + colW + 6;
-
-  const left: { label: string; value: string }[] = [];
-  const right: { label: string; value: string }[] = [];
+  type VisionBlock = { label: string; value: string };
+  const blocks: VisionBlock[] = [];
 
   if (s.memorableMoment.trim()) {
-    left.push({ label: "Signature moment", value: s.memorableMoment });
+    blocks.push({ label: "Signature moment", value: s.memorableMoment });
   }
   if (s.culturalNotes.trim()) {
-    left.push({ label: "Cultural / religious notes", value: s.culturalNotes });
+    blocks.push({ label: "Cultural / religious notes", value: s.culturalNotes });
   }
   if (s.inspirationLinks.trim()) {
-    right.push({ label: "Inspiration links", value: s.inspirationLinks });
+    blocks.push({ label: "Inspiration links", value: s.inspirationLinks });
   }
   if (s.notes.trim()) {
-    right.push({ label: "Additional notes", value: s.notes });
+    blocks.push({ label: "Additional notes", value: s.notes });
   }
 
-  if (!left.length && !right.length) {
-    return y + LINE * 0.35;
+  // Full-width stack (same order as the form). Two-column layout was causing jsPDF to
+  // advance pages on the left column while the right column rendered on a later page.
+  for (const block of blocks) {
+    y = drawMultilineBlockAt(doc, block.label, block.value, MARGIN, y, CONTENT_W);
   }
 
-  let yLeft = y;
-  let yRight = y;
-
-  for (const block of left) {
-    yLeft = drawMultilineBlockAt(doc, block.label, block.value, leftX, yLeft, colW);
-  }
-  for (const block of right) {
-    yRight = drawMultilineBlockAt(doc, block.label, block.value, rightX, yRight, colW);
-  }
-
-  return Math.max(yLeft, yRight) + LINE * 0.35;
+  return y + LINE * 0.25;
 }
 
 function drawPageFooter(doc: jsPDF, pageW: number, pageNum: number, totalPages: number) {
@@ -488,7 +479,7 @@ export async function buildQuestionnairePdfBlob(s: QState): Promise<Blob> {
   y = drawSubheading(doc, "Floral preference", y);
   y = drawBulletList(doc, s.floralPrefs, y, pageW);
 
-  // —— Step 3: Budget & vision (2-column notes to save space) ——
+  // —— Step 3: Budget & vision ——
   y = drawBudgetVisionSection(doc, s, y, pageW);
 
   // —— Contact ——
@@ -524,10 +515,6 @@ export function buildWhatsappSendPdfHref(s: QState): string {
     ``,
     `I'm sending my completed *Event Styling Brief* as a PDF.`,
     clientPhone ? `My WhatsApp: ${clientPhone}` : null,
-    ``,
-    `Please attach your PDF in WhatsApp before sending:`,
-    `Mobile: tap + or the paperclip, then Document, and choose ${defaultPdfFilename()}.`,
-    `Desktop: click the paperclip, then Document, and select the file from Downloads.`,
     ``,
     name,
   ]

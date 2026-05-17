@@ -1,203 +1,212 @@
-# Kamelia (Next.js) — Component Catalog
+# Kamelia — The Floral Designer
 
-This repo is a **Next.js 15 (App Router)** site. Most UI in `src/components/**` is reusable and can be copied into other projects.
+Marketing site for **Kamelia**, a luxury floral and event styling studio in Mauritius. Built with **Next.js 15** (App Router), **React 19**, **Tailwind CSS 4**, and **Framer Motion**.
 
-**Imports**
-- Path alias: `@/*` → `src/*` (see `tsconfig.json`)
-- Many components are **client components** (`"use client"`), so they can use hooks, `framer-motion`, `window`, etc.
+The homepage presents services, a photo portfolio, a TikTok video gallery, brand story, and a multi-step **event questionnaire** that generates a branded PDF brief and links clients to WhatsApp.
 
-## Pages / Routes
-- Home: `src/app/page.tsx`
-- Contact page: `src/app/contact/page.tsx`
-- API: `GET /api/tiktok-oembed`: `src/app/api/tiktok-oembed/route.ts`
+## Features
 
-## Layout / Shell
+- **Hero** — Full-viewport background video with CTAs to the contact form and gallery
+- **Occasions & services** — Packages section with motion reveals
+- **Portfolio** — Server-rendered grid from images in `public/portfolio/`
+- **TikTok gallery** — Square tiles with oEmbed thumbnails, in-page modal player, and per-card “View on TikTok” links
+- **Event questionnaire** — Three-step guided brief (event & venue → design & decor → budget & contact)
+- **PDF export** — Client-side brief PDF (`jsPDF`) with studio banner and structured sections
+- **WhatsApp handoff** — Deep link to Kamelia’s studio number after PDF download (client attaches the file)
+- **Splash loader** — First-visit preload splash; skipped on repeat visits in the same session
+- **Responsive nav** — Fixed navbar with animated mobile menu (Escape to close, body scroll lock)
 
-### `Navbar`
-- File: `src/components/Navbar.tsx`
-- Import: `import { Navbar } from "@/components/Navbar";`
-- What it does: fixed top nav with desktop links + animated mobile fullscreen menu (Escape-to-close, body scroll lock).
-- Props: none
+## Tech stack
 
-Usage:
+| Layer | Choice |
+|--------|--------|
+| Framework | Next.js 15.3 (App Router, Turbopack in dev) |
+| UI | React 19, Tailwind CSS 4 |
+| Motion | Framer Motion 12 |
+| PDF | jsPDF 3 |
+| Language | TypeScript 5 |
+| Fonts | Cormorant Garamond + DM Sans (Google Fonts) |
+
+## Getting started
+
+### Prerequisites
+
+- **Node.js** 20+ (LTS recommended)
+- **npm** (or pnpm / yarn)
+
+### Install and run
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server (`next dev --turbopack`) |
+| `npm run build` | Production build |
+| `npm run start` | Serve production build |
+| `npm run lint` | ESLint |
+
+### Path alias
+
+Imports use `@/*` → `src/*` (see `tsconfig.json`).
+
+## Routes
+
+| Route | File | Purpose |
+|-------|------|---------|
+| `/` | `src/app/page.tsx` | Homepage (all main sections) |
+| `/contact` | `src/app/contact/page.tsx` | Redirect-style page linking to `/#contact` |
+| `GET /api/tiktok-oembed?url=…` | `src/app/api/tiktok-oembed/route.ts` | Server proxy for TikTok oEmbed (thumbnails, video IDs) |
+
+## Homepage layout
+
+`src/app/page.tsx` composes the site inside `SiteLoader`:
+
+```
+Navbar
+HeroScroll
+PackagesSection
+PortfolioSection
+GallerySection
+AboutSection
+ContactSection
+Footer
+```
+
+Section IDs match `src/data/site-nav.ts` (`#home`, `#packages`, `#portfolio`, `#gallery`, `#about`, `#contact`).
+
+## Project structure
+
+```
+kamelia/
+├── public/
+│   ├── herovideo.mp4          # Hero background video
+│   ├── banner.jpeg            # PDF header image
+│   ├── portfolio/             # Portfolio grid images (auto-listed)
+│   └── …                      # Brand / marketing stills
+├── src/
+│   ├── app/                   # App Router pages, layout, API routes
+│   ├── components/            # UI components
+│   │   ├── contact/           # EventQuestionnaire
+│   │   ├── gallery/           # TikTok tiles, modal, types
+│   │   └── sections/          # Homepage sections
+│   ├── data/                  # Content config (nav, gallery URLs, form options)
+│   ├── hooks/                 # useInitialLoad (splash / preload)
+│   └── lib/                   # PDF generation, button classes, asset preload
+└── package.json
+```
+
+## Event questionnaire
+
+**Component:** `src/components/contact/EventQuestionnaire.tsx`  
+**State type:** `src/data/questionnaire-q-state.ts` (`QState`)  
+**Form options:** `src/data/event-questionnaire.ts`  
+**PDF:** `src/lib/generateQuestionnairePdf.ts`
+
+### Steps
+
+1. **Event & venue** — Type, date, time, guest count, venue name, indoor/outdoor
+2. **Design & decor** — Theme, colour swatches, areas, elements, floral preferences, priorities
+3. **Budget & contact** — Budget range, inspiration links, cultural notes, memorable moment, notes, name, WhatsApp
+
+### Flow
+
+- **Continue** validates the current step and scrolls to the first invalid field if needed.
+- **Generate my vision** builds and downloads a PDF, then **clears the form** while keeping contact details for WhatsApp.
+- **Send to Kamelia on WhatsApp** opens a chat with the studio number and a pre-filled message (user attaches the downloaded PDF).
+
+### Variants
+
 ```tsx
-import { Navbar } from "@/components/Navbar";
-
-export default function Page() {
-  return (
-    <>
-      <Navbar />
-      {/* page content */}
-    </>
-  );
-}
+<EventQuestionnaire variant="embedded" />  {/* homepage #contact */}
+<EventQuestionnaire variant="page" />      {/* standalone full-page layout */}
 ```
 
-### `Footer`
-- File: `src/components/Footer.tsx`
-- Import: `import { Footer } from "@/components/Footer";`
-- What it does: footer brand block, shortcuts, CTA, and social icons.
-- Props: none
+## Contact details
 
-### `SocialIcons`
-- File: `src/components/SocialIcons.tsx`
-- Import: `import { SocialIcons } from "@/components/SocialIcons";`
-- What it does: Facebook/Instagram/TikTok icon links.
-- Props:
-  - `className?: string`
-  - `onNavigate?: () => void` (handy for “close menu when tapped”)
-- Data dependency: `src/data/social-links.ts` (`SOCIAL_LINKS`)
+Centralised in `src/data/contact.ts`:
 
-Usage:
-```tsx
-<SocialIcons className="mt-3" onNavigate={() => setOpen(false)} />
-```
+- Display: **+230 5775 1516**
+- `kameliaTelHref()` — `tel:` link
+- `kameliaWhatsAppHref(text?)` — `wa.me` link with optional prefill
+- `buildWhatsappSendPdfHref(state)` — questionnaire success handoff (in PDF module)
 
-## Hero
+Update the phone constants here to change footer, contact section, and WhatsApp targets site-wide.
 
-### `HeroScroll`
-- File: `src/components/HeroScroll.tsx`
-- Import: `import { HeroScroll } from "@/components/HeroScroll";`
-- What it does: scroll-scrubbed hero made from **frame-by-frame JPGs** drawn into a `<canvas>`.
-- Props: none
-- Data dependency: `src/data/hero-frames.ts` (`HERO_FRAME_COUNT`, `heroFrameUrls`)
-- Assets dependency: `public/ezgif-2480cda9ca8a75e6-jpg/ezgif-frame-001.jpg` … etc.
+## TikTok gallery
 
-Usage:
-```tsx
-<HeroScroll />
-```
+**Data:** `src/data/tiktok-gallery.ts` — edit `tiktokGalleryItems` (URL, title, caption rails, description).
 
-## Section Components (Homepage building blocks)
+**UI:**
 
-### `PackagesSection`
-- File: `src/components/sections/PackagesSection.tsx`
-- Import: `import { PackagesSection } from "@/components/sections/PackagesSection";`
-- What it does: “Packages” + “Services” marketing section with motion reveals.
-- Props: none
+- `GallerySection` — grid, fetches oEmbed per URL, opens modal
+- `NorrisGalleryTile` — square portfolio-style card + “View on TikTok”
+- `TikTokGalleryModal` — 9:16 embed player (Escape to close)
 
-### `GallerySection`
-- File: `src/components/sections/GallerySection.tsx`
-- Import: `import { GallerySection } from "@/components/sections/GallerySection";`
-- What it does:
-  - Renders a staggered grid of tiles from `tiktokGalleryItems`
-  - Fetches oEmbed metadata via `/api/tiktok-oembed`
-  - Opens a modal player (`TikTokGalleryModal`)
-- Props: none
-- Data dependency: `src/data/tiktok-gallery.ts`
-- API dependency: `src/app/api/tiktok-oembed/route.ts`
+**API:** `GET /api/tiktok-oembed?url=<encoded-tiktok-url>` returns `videoId`, `thumbnailUrl`, `title`, `authorName`. If TikTok blocks the request, tiles still work via external links and placeholders.
 
-### `AboutSection`
-- File: `src/components/sections/AboutSection.tsx`
-- Import: `import { AboutSection } from "@/components/sections/AboutSection";`
-- What it does: “Our story” text section with motion.
-- Props: none
+## Portfolio
 
-### `ContactSection`
-- File: `src/components/sections/ContactSection.tsx`
-- Import: `import { ContactSection } from "@/components/sections/ContactSection";`
-- What it does: wrapper section for the questionnaire in embedded mode.
-- Props: none
-- Uses: `EventQuestionnaire` with `variant="embedded"`
+`PortfolioSection` reads every image file in `public/portfolio/` at build/request time and renders `PortfolioGridClient`. Add or remove files in that folder to update the grid—no code change required.
 
-Typical home composition (`src/app/page.tsx`):
-```tsx
-<Navbar />
-<HeroScroll />
-<PackagesSection />
-<GallerySection />
-<AboutSection />
-<ContactSection />
-<Footer />
-```
+## Styling
 
-## Contact / Questionnaire
+- Global tokens and base styles: `src/app/globals.css` (`--color-gold`, `--color-surface`, etc.)
+- Shared CTA classes: `src/lib/button-classes.ts` (`btnPrimaryClass`, `btnSecondaryClass`) — square gold buttons with white labels, matching form chrome
+- Most interactive UI uses **client components** (`"use client"`) for hooks, Framer Motion, and browser APIs
 
-### `EventQuestionnaire`
-- File: `src/components/contact/EventQuestionnaire.tsx`
-- Import: `import { EventQuestionnaire } from "@/components/contact/EventQuestionnaire";`
-- What it does:
-  - Multi-step event questionnaire (“cart-style” estimate)
-  - Generates a PDF brief with `jsPDF`
-  - Builds a WhatsApp deep-link message (user attaches PDF manually)
-- Props:
-  - `variant?: "page" | "embedded"` (default `"page"`)
-    - `"page"`: full-screen page layout
-    - `"embedded"`: section-embed layout (used on home)
-- Re-exported type: `QState` (`export type { QState } ...`)
-- Data dependency: `src/data/event-questionnaire.ts` (options lists)
-- State type: `src/data/questionnaire-q-state.ts` (`QState`)
-- PDF/WhatsApp helpers: `src/lib/generateQuestionnairePdf.ts`
+## Key components
 
-Usage (embedded inside a section):
-```tsx
-<EventQuestionnaire variant="embedded" />
-```
+| Component | Path | Role |
+|-----------|------|------|
+| `SiteLoader` | `src/components/SiteLoader.tsx` | Splash + fade-in wrapper |
+| `SplashScreen` | `src/components/SplashScreen.tsx` | Branded loading screen |
+| `Navbar` | `src/components/Navbar.tsx` | Fixed nav, mobile drawer |
+| `HeroScroll` | `src/components/HeroScroll.tsx` | Video hero + CTAs |
+| `Footer` | `src/components/Footer.tsx` | Links, phone, social |
+| `SocialIcons` | `src/components/SocialIcons.tsx` | Social links from `src/data/social-links.ts` |
+| `PackagesSection` | `src/components/sections/PackagesSection.tsx` | Occasions / services |
+| `PortfolioSection` | `src/components/sections/PortfolioSection.tsx` | Image portfolio |
+| `GallerySection` | `src/components/sections/GallerySection.tsx` | TikTok gallery |
+| `AboutSection` | `src/components/sections/AboutSection.tsx` | Brand story |
+| `ContactSection` | `src/components/sections/ContactSection.tsx` | Questionnaire embed |
+| `EventQuestionnaire` | `src/components/contact/EventQuestionnaire.tsx` | Multi-step form + PDF |
 
-Usage (as a full page):
-```tsx
-<EventQuestionnaire variant="page" />
-```
+## Configuration files
 
-## Gallery Building Blocks
+| File | What to edit |
+|------|----------------|
+| `src/data/site-nav.ts` | Navbar / footer link labels and hashes |
+| `src/data/social-links.ts` | Facebook, Instagram, TikTok URLs |
+| `src/data/contact.ts` | Studio phone and WhatsApp helpers |
+| `src/data/tiktok-gallery.ts` | Gallery video URLs and copy |
+| `src/data/event-questionnaire.ts` | Dropdowns, swatches, budget ranges |
+| `src/data/questionnaire-q-state.ts` | `QState` shape (keep in sync with form + PDF) |
 
-### `NorrisGalleryTile`
-- File: `src/components/gallery/NorrisGalleryTile.tsx`
-- Import: `import { NorrisGalleryTile } from "@/components/gallery/NorrisGalleryTile";`
-- What it does: clickable 9:16 tile with “partial box” frame styling + caption; uses oEmbed thumbnail when available.
-- Props:
-  - `item: TikTokGalleryItem` (from `src/data/tiktok-gallery.ts`)
-  - `index: number`
-  - `meta: TikTokOEmbedResult | undefined` (from `src/components/gallery/tiktok-types.ts`)
-  - `onOpen: () => void`
+## Assets
 
-### `TikTokGalleryModal`
-- File: `src/components/gallery/TikTokGalleryModal.tsx`
-- Import: `import { TikTokGalleryModal } from "@/components/gallery/TikTokGalleryModal";`
-- What it does: modal dialog with TikTok embed player, Escape-to-close, scroll lock, focus close button.
-- Props:
-  - `open: boolean`
-  - `item: TikTokGalleryItem | null`
-  - `meta: TikTokOEmbedResult | null`
-  - `onClose: () => void`
+| Asset | Used by |
+|-------|---------|
+| `public/herovideo.mp4` | Hero background |
+| `public/banner.jpeg` | PDF header |
+| `public/portfolio/*` | Portfolio section |
+| `public/logo_black.png` | Favicon / metadata (`layout.tsx`) |
 
-### `TikTokVideoCard`
-- File: `src/components/gallery/TikTokVideoCard.tsx`
-- Import: `import { TikTokVideoCard } from "@/components/gallery/TikTokVideoCard";`
-- What it does: alternative “editorial” TikTok card UI (thumbnail + play button).
-- Props:
-  - `item: TikTokGalleryItem`
-  - `index: number`
-  - `meta: TikTokOEmbedResult | undefined`
-  - `onOpen: () => void`
-  - `variant?: "default" | "fan"` (default `"default"`)
-  - `className?: string`
+Large media files are not committed in all environments—ensure required assets exist under `public/` before deploying.
 
-### `TikTokOEmbedResult` type
-- File: `src/components/gallery/tiktok-types.ts`
-- Import: `import type { TikTokOEmbedResult } from "@/components/gallery/tiktok-types";`
-- Shape:
-  - `videoId: string | null`
-  - `thumbnailUrl: string | null`
-  - `title: string | null`
-  - `authorName: string | null`
+## Deployment
 
-## “Paste into Claude” quick context
+1. `npm run build`
+2. `npm run start` (or deploy to Vercel / any Node host that supports Next.js 15)
 
-If you want Claude to reuse a component, give it:
-1) the file path(s) from `src/components/**` you want,
-2) any dependencies it needs (data files in `src/data/**`, types, and any `public/**` assets),
-3) and where you plan to mount it (page/section).
+No environment variables are required for core functionality. TikTok oEmbed may be rate-limited or blocked by TikTok from some hosts; the gallery degrades gracefully.
 
-Example prompt snippet:
-```
-I have a Next.js App Router + Tailwind project.
-Please port these components exactly (TypeScript): 
-- src/components/Navbar.tsx
-- src/components/Footer.tsx
-- src/components/SocialIcons.tsx
+## License
 
-Keep the same import alias @/* (or rewrite imports if needed).
-Also copy: src/data/social-links.ts
-```
-
+Private project — all rights reserved unless otherwise specified by the repository owner.

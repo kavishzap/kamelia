@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { btnPrimaryClass } from "@/lib/button-classes";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function ContactPage() {
         </p>
         <Link
           href="/#contact"
-          className="mt-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[var(--color-gold)] px-8 py-3 text-sm font-semibold text-black shadow-md transition hover:bg-[var(--color-gold-soft)]"
+          className={`mt-2 ${btnPrimaryClass}`}
         >
           Open questionnaire
         </Link>
