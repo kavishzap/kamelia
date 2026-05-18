@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { FillImage } from "@/components/FillImage";
 
 export function PackagesSection() {
   const arrangementTiles = [
@@ -78,18 +78,16 @@ export function PackagesSection() {
                   {tile.badge}
                 </div>
               ) : null}
-              <div className="relative aspect-[3/4] w-full">
-                <div className="relative aspect-[3/4] w-full">
-                  <Image
-                    src={tile.src}
-                    alt={tile.alt}
-                    fill
-                    loading="lazy"
-                    sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 30vw, (min-width: 640px) 48vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
+              <motion.div className="relative aspect-[3/4] w-full" suppressHydrationWarning>
+                <FillImage
+                  src={tile.src}
+                  alt={tile.alt}
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 30vw, (min-width: 640px) 48vw, 100vw"
+                  className="object-cover"
+                />
+              </motion.div>
             </motion.div>
           ))}
         </div>

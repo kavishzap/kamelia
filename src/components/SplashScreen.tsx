@@ -32,6 +32,7 @@ export function SplashScreen({ progress }: SplashScreenProps) {
           width={720}
           height={240}
           decoding="async"
+          suppressHydrationWarning
           className="h-16 w-auto object-contain sm:h-20"
         />
         <p className="mt-5 font-[family-name:var(--font-display)] text-2xl font-semibold text-black sm:text-3xl">

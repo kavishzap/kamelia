@@ -121,6 +121,7 @@ export function Navbar() {
                 width={720}
                 height={240}
                 decoding="async"
+                suppressHydrationWarning
                 className="h-11 w-auto shrink-0 object-contain object-left sm:h-12"
               />
               <BrandLockup />

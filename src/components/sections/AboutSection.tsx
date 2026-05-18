@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { FillImage } from "@/components/FillImage";
 
 export function AboutSection() {
   return (
@@ -49,8 +49,8 @@ export function AboutSection() {
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-[420px] justify-self-center overflow-hidden bg-white shadow-sm ring-1 ring-black/5 md:justify-self-end"
           >
-            <div className="relative aspect-[5/4] w-full">
-              <Image
+            <motion.div className="relative aspect-[5/4] w-full" suppressHydrationWarning>
+              <FillImage
                 src="/wedding.jpg"
                 alt="Kamelia wedding floral design"
                 fill
@@ -58,7 +58,7 @@ export function AboutSection() {
                 sizes="(min-width: 768px) 420px, 92vw"
                 className="object-cover"
               />
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

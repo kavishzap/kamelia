@@ -21,6 +21,7 @@ export function HeroScroll() {
           loop
           playsInline
           preload="auto"
+          suppressHydrationWarning
           className="absolute inset-0 h-full w-full object-cover"
         />
 
@@ -51,16 +52,16 @@ export function HeroScroll() {
               Wedding stages, floral arches, mandaps, engagement decor, and premium event styling.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center justify-start gap-3 sm:gap-4">
+            <div className="mt-9 flex w-full max-w-[min(100%,280px)] flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-start sm:gap-4">
               <Link
                 href="/#contact"
-                className={`${btnPrimaryClass} min-w-[160px] px-8 py-3`}
+                className={`${btnPrimaryClass} w-full min-h-[48px] justify-center px-8 py-3 sm:w-auto sm:min-w-[180px]`}
               >
                 Plan Your Event
               </Link>
               <Link
                 href="/#gallery"
-                className={`${btnHeroOutlineClass} min-w-[160px] py-3`}
+                className={`${btnHeroOutlineClass} w-full min-h-[48px] justify-center px-8 py-3 sm:w-auto sm:min-w-[180px]`}
               >
                 View Gallery
               </Link>

@@ -17,6 +17,7 @@ export function Footer() {
                 width={720}
                 height={240}
                 decoding="async"
+                suppressHydrationWarning
                 className="h-14 w-auto shrink-0 object-contain sm:h-16"
               />
               <div className="leading-tight">

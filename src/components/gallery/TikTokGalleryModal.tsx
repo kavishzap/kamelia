@@ -54,7 +54,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
       {open && item && (
         <motion.div
           role="presentation"
-          className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-4"
+          className="fixed inset-0 z-[200] flex items-center justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[calc(4.5rem+env(safe-area-inset-top)+0.5rem)] sm:p-4 sm:pt-[max(1.5rem,env(safe-area-inset-top))]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -71,7 +71,7 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-[101] mx-auto w-full max-w-[min(420px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-white shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.22)]"
+            className="relative z-[201] mx-auto flex w-full max-w-[min(420px,calc(100vw-2rem))] max-h-[calc(100dvh-5.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col overflow-hidden rounded-2xl border border-[#c9a962]/35 bg-white shadow-[0_0_0_1px_rgba(201,169,98,0.08),0_24px_80px_rgba(0,0,0,0.22)] sm:max-h-[min(calc(100dvh-3rem),calc((min(420px,100vw-2rem))*16/9+2rem))]"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -93,9 +93,9 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
               </svg>
             </button>
 
-            <div className="relative w-full bg-[var(--color-surface)]">
+            <div className="relative min-h-0 w-full flex-1 bg-[var(--color-surface)]">
               {embedSrc ? (
-                <div className="relative mx-auto aspect-[9/16] h-auto w-full max-h-[min(calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-3rem),calc((min(420px,100vw-2rem))*16/9))] max-w-[min(420px,calc(100vw-2rem))]">
+                <motion.div className="relative mx-auto aspect-[9/16] h-[min(calc(100dvh-5.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom)),calc((min(420px,100vw-2rem))*16/9))] w-auto max-w-[min(420px,calc(100vw-2rem))] sm:h-[min(calc(100dvh-4rem),calc((min(420px,100vw-2rem))*16/9))]">
                   <iframe
                     title="TikTok video"
                     src={embedSrc}
@@ -104,16 +104,16 @@ export function TikTokGalleryModal({ open, item, meta, onClose }: Props) {
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
                   />
-                </div>
+                </motion.div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+                <motion.div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
                   <p className="font-[family-name:var(--font-display)] text-lg text-[var(--color-cream)]">
                     Preview unavailable
                   </p>
                   <p className="max-w-xs text-sm leading-relaxed text-[var(--color-muted)]">
                     This clip could not be loaded. Try again later or use the link under the gallery tile.
                   </p>
-                </div>
+                </motion.div>
               )}
             </div>
           </motion.div>

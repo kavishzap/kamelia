@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { FillImage } from "@/components/FillImage";
 
 type PortfolioImage = {
   src: string;
@@ -25,8 +25,8 @@ export function PortfolioGridClient({ images }: { images: PortfolioImage[] }) {
           className="relative overflow-hidden bg-white shadow-sm ring-1 ring-black/5 will-change-transform"
           whileHover={{ scale: 1.02 }}
         >
-          <div className="relative aspect-square w-full">
-            <Image
+          <div className="relative aspect-square w-full" suppressHydrationWarning>
+            <FillImage
               src={img.src}
               alt={img.alt}
               fill

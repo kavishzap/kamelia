@@ -37,17 +37,18 @@ function completeSplash(
   }, 400);
 }
 
-export function useInitialLoad(skipSplash = false): LoadState {
-  const [progress, setProgress] = useState(skipSplash ? 1 : 0);
-  const [isReady, setIsReady] = useState(skipSplash);
-  const [showSplash, setShowSplash] = useState(!skipSplash);
+/** Always starts with splash visible so SSR and the first client render match. */
+export function useInitialLoad(): LoadState {
+  const [progress, setProgress] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const activeLoadId = useRef(0);
 
   useEffect(() => {
-    if (skipSplash) {
+    if (shouldSkipSplash()) {
+      setProgress(1);
       setIsReady(true);
       setShowSplash(false);
-      setProgress(1);
       return;
     }
 
@@ -83,7 +84,7 @@ export function useInitialLoad(skipSplash = false): LoadState {
     return () => {
       cancelled = true;
     };
-  }, [skipSplash]);
+  }, []);
 
   useEffect(() => {
     if (!showSplash) {
@@ -102,7 +103,6 @@ export function useInitialLoad(skipSplash = false): LoadState {
 }
 
 export function shouldSkipSplash(): boolean {
-  if (typeof window === "undefined") return false;
   try {
     return sessionStorage.getItem(SESSION_KEY) === "1";
   } catch {

@@ -40,13 +40,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`bg-[var(--color-surface)] ${cormorant.variable} ${dmSans.variable}`}
     >
       <head>
         <link rel="preload" href="/logo_black.png" as="image" type="image/png" />
         <link rel="preload" href="/herovideo.mp4" as="video" type="video/mp4" />
       </head>
-      <body className="antialiased">{children}</body>
+      <body suppressHydrationWarning className="antialiased">
+        {children}
+      </body>
     </html>
   );
 }

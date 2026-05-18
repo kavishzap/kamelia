@@ -1,33 +1,15 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SplashScreen } from "@/components/SplashScreen";
-import { shouldSkipSplash, useInitialLoad } from "@/hooks/useInitialLoad";
-
-function subscribeSkipSplash() {
-  return () => undefined;
-}
-
-function getSkipSplashSnapshot() {
-  return shouldSkipSplash();
-}
-
-function getSkipSplashServerSnapshot() {
-  return false;
-}
+import { useInitialLoad } from "@/hooks/useInitialLoad";
 
 type SiteLoaderProps = {
   children: React.ReactNode;
 };
 
 export function SiteLoader({ children }: SiteLoaderProps) {
-  const skipSplash = useSyncExternalStore(
-    subscribeSkipSplash,
-    getSkipSplashSnapshot,
-    getSkipSplashServerSnapshot,
-  );
-  const { isReady, progress, showSplash } = useInitialLoad(skipSplash);
+  const { isReady, progress, showSplash } = useInitialLoad();
 
   return (
     <>
