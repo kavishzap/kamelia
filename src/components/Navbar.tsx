@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { SocialIcons } from "@/components/SocialIcons";
 import { siteNavLinks } from "@/data/site-nav";
 
@@ -73,9 +74,19 @@ function HamburgerIcon({ open, reduceMotion }: { open: boolean; reduceMotion: bo
   );
 }
 
+function scrollToHash(hash: string) {
+  const id = hash.replace(/^#/, "");
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (!open) return;
@@ -98,6 +109,26 @@ export function Navbar() {
   const closeMenu = () => setOpen(false);
   const toggleMenu = () => setOpen((v) => !v);
 
+  const onNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const hashIndex = href.indexOf("#");
+    if (hashIndex === -1) return;
+
+    const path = href.slice(0, hashIndex) || "/";
+    const hash = href.slice(hashIndex);
+    const targetPath = path === "" || path === "/" ? "/" : path;
+
+    if (pathname === targetPath || (pathname === "/" && targetPath === "/")) {
+      e.preventDefault();
+      closeMenu();
+      requestAnimationFrame(() => scrollToHash(hash));
+      window.history.replaceState(null, "", hash === "#home" ? "/" : `/${hash}`);
+      return;
+    }
+
+    closeMenu();
+    router.push(href);
+  };
+
   return (
     <>
       <header
@@ -113,7 +144,7 @@ export function Navbar() {
             <Link
               href="/#home"
               className="flex min-w-0 shrink-0 items-center gap-3 sm:gap-3.5"
-              onClick={closeMenu}
+              onClick={(e) => onNavClick(e, "/#home")}
             >
               <img
                 src="/logo_black.png"
@@ -132,6 +163,7 @@ export function Navbar() {
                 <Link
                   key={l.href}
                   href={l.href}
+                  onClick={(e) => onNavClick(e, l.href)}
                   className="whitespace-nowrap text-sm font-medium text-[var(--color-muted)] transition-colors hover:text-[var(--color-gold)]"
                 >
                   {l.label}
@@ -186,7 +218,7 @@ export function Navbar() {
                       <Link
                         href={l.href}
                         className="block text-center font-[family-name:var(--font-display)] text-[clamp(1.35rem,4.8vw,2rem)] font-medium leading-snug tracking-tight text-black transition hover:text-[var(--color-gold)]"
-                        onClick={closeMenu}
+                        onClick={(e) => onNavClick(e, l.href)}
                       >
                         {l.label}
                       </Link>

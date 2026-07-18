@@ -3,25 +3,51 @@
 @theme {
   --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-  /* Light theme tokens */
+  /* Light theme tokens — cards / chrome stay clean white */
   --color-surface: #ffffff;
-  --color-surface-raised: #fbfaf7;
+  --color-surface-raised: #fff0f3;
   --color-surface-card: #ffffff;
   --color-gold: #c9a962;
   --color-gold-soft: #d4bc7a;
   /* "cream" is the primary text color token in this codebase */
   --color-cream: #171717;
   --color-muted: #5f5b54;
+  /*
+   * Page atmosphere — white → soft pastel pink (225deg).
+   * Stronger stops so the pink reads clearly behind content.
+   */
+  --page-gradient: linear-gradient(
+    225deg,
+    #ffffff 0%,
+    #ffeef1 28%,
+    #ffd0da 62%,
+    #ffb8c6 100%
+  );
 }
 
 html {
   scroll-behavior: smooth;
+  min-height: 100%;
+  background-color: #ffb8c6;
 }
 
 body {
   font-family: var(--font-sans);
   color: var(--color-cream);
-  background-color: var(--color-surface);
+  min-height: 100%;
+  background-color: transparent;
+  position: relative;
+}
+
+/* Fixed wash so the pink is always visible while scrolling */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--page-gradient);
+  background-color: #ffb8c6;
 }
 
 ::selection {

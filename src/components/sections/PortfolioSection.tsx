@@ -1,6 +1,5 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-import { SocialIcons } from "@/components/SocialIcons";
 import { ScrollSection } from "@/components/ScrollSection";
 import { PortfolioGridClient } from "@/components/sections/PortfolioGridClient";
 
@@ -33,7 +32,7 @@ export async function PortfolioSection() {
   return (
     <ScrollSection
       id="portfolio"
-      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
+      className="relative scroll-mt-24 bg-transparent px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
         <div className="mx-auto max-w-xl text-center">
@@ -49,13 +48,6 @@ export async function PortfolioSection() {
         </div>
 
         <PortfolioGridClient images={images} />
-
-        <div className="mt-8 flex flex-col items-center gap-4 text-center sm:mt-10">
-          <p className="font-[family-name:var(--font-display)] text-base font-medium text-[var(--color-cream)] sm:text-lg">
-            Follow more on Instagram and TikTok
-          </p>
-          <SocialIcons platforms={["instagram", "tiktok"]} variant="light" />
-        </div>
       </div>
     </ScrollSection>
   );

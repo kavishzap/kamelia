@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { tiktokGalleryItems } from "@/data/tiktok-gallery";
-import { SocialIcons } from "@/components/SocialIcons";
 import { ScrollSection } from "@/components/ScrollSection";
 import { TikTokGalleryModal } from "@/components/gallery/TikTokGalleryModal";
 import type { TikTokOEmbedResult } from "@/components/gallery/tiktok-types";
@@ -143,7 +142,7 @@ export function VideosSection() {
     <>
     <ScrollSection
       id="videos"
-      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
+      className="relative scroll-mt-24 bg-transparent px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
         <motion.div
@@ -169,7 +168,7 @@ export function VideosSection() {
             <VideoTile
               index={0}
               label={featured.piece ?? featured.title}
-              src={metaById[featured.id]?.thumbnailUrl}
+              src={metaById[featured.id]?.thumbnailUrl ?? undefined}
               onOpen={() => setActiveId(featured.id)}
               className={
                 side.length === 2
@@ -185,7 +184,7 @@ export function VideosSection() {
                     key={item.id}
                     index={i + 1}
                     label={item.piece ?? item.title}
-                    src={metaById[item.id]?.thumbnailUrl}
+                    src={metaById[item.id]?.thumbnailUrl ?? undefined}
                     onOpen={() => setActiveId(item.id)}
                     className="aspect-[4/5] lg:aspect-auto lg:min-h-[272px]"
                   />
@@ -201,20 +200,13 @@ export function VideosSection() {
                   key={item.id}
                   index={i + 3}
                   label={item.piece ?? item.title}
-                  src={metaById[item.id]?.thumbnailUrl}
+                  src={metaById[item.id]?.thumbnailUrl ?? undefined}
                   onOpen={() => setActiveId(item.id)}
                   className="aspect-[4/5]"
                 />
               ))}
             </div>
           ) : null}
-        </div>
-
-        <div className="mt-8 flex flex-col items-center gap-4 text-center sm:mt-10">
-          <p className="font-[family-name:var(--font-display)] text-base font-medium text-[var(--color-cream)] sm:text-lg">
-            Follow more on TikTok
-          </p>
-          <SocialIcons platforms={["tiktok"]} variant="light" />
         </div>
       </div>
     </ScrollSection>

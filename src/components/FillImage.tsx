@@ -9,6 +9,6 @@ type FillImageProps = Omit<ImageProps, "fill"> & {
 /**
  * next/image `fill` inline styles can differ between SSR and hydration (e.g. left: 0 vs "0px").
  */
-export function FillImage({ className, ...props }: FillImageProps) {
-  return <Image fill className={className} suppressHydrationWarning {...props} />;
+export function FillImage({ className, fill = true, ...props }: FillImageProps) {
+  return <Image {...props} className={className} suppressHydrationWarning fill={fill} />;
 }
