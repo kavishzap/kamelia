@@ -5,8 +5,8 @@ import { btnPrimaryClass } from "@/lib/button-classes";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Kamelia",
-  description: "Plan your event with Kamelia — the event questionnaire lives on our homepage.",
+  title: "Contact — Kamellia",
+  description: "Plan your event with Kamellia — the event questionnaire lives on our homepage.",
 };
 
 export default function ContactPage() {
@@ -15,7 +15,7 @@ export default function ContactPage() {
       <Navbar />
       <div className="mx-auto flex max-w-lg flex-col items-center gap-6 px-6 py-28 text-center sm:py-36">
         <p className="font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.35em] text-[var(--color-gold)]">
-          Kamelia
+          Kamellia
         </p>
         <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-cream)] sm:text-3xl">
           Plan your event here

@@ -2,7 +2,7 @@
  * TikTok gallery — edit URLs here. Short links (vt.tiktok.com) are resolved server-side
  * via oEmbed for thumbnails and embed IDs when possible.
  *
- * Eight cards — one unique short link per tile (order matches gallery left-to-right / rows).
+ * Seven cards — one unique short link per tile (order matches gallery left-to-right / rows).
  */
 export type TikTokGalleryItem = {
   id: string;
@@ -25,7 +25,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-1",
     url: "https://vt.tiktok.com/ZS9cvux4Q/",
     title: "Floral moment I",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Install",
     year: "2025",
     piece: "Arch study",
@@ -35,7 +35,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-2",
     url: "https://vt.tiktok.com/ZS9cvuHmT/",
     title: "Floral moment II",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Reception",
     year: "2025",
     piece: "Candle aisle",
@@ -45,7 +45,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-3",
     url: "https://vt.tiktok.com/ZS9cva86N/",
     title: "Floral moment III",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Mandap",
     year: "2024",
     piece: "Gold canopy",
@@ -55,7 +55,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-4",
     url: "https://vt.tiktok.com/ZS9cvVuT1/",
     title: "Floral moment IV",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Install",
     year: "2025",
     piece: "Entrance",
@@ -65,7 +65,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-5",
     url: "https://vt.tiktok.com/ZS9cv9emW/",
     title: "Floral moment V",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Private",
     year: "2025",
     piece: "Tablescape",
@@ -75,7 +75,7 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-6",
     url: "https://vt.tiktok.com/ZS9cvftCt/",
     title: "Floral moment VI",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Corporate",
     year: "2024",
     piece: "Lobby",
@@ -85,20 +85,10 @@ export const tiktokGalleryItems: TikTokGalleryItem[] = [
     id: "tt-7",
     url: "https://vt.tiktok.com/ZS9cvyhyf/",
     title: "Floral moment VII",
-    subtitle: "Kamelia on TikTok",
+    subtitle: "Kamellia on TikTok",
     season: "Install",
     year: "2025",
     piece: "Ceiling",
     description: "Suspended floral ceiling with mixed heights, crystal drops, and controlled weight engineering.",
-  },
-  {
-    id: "tt-8",
-    url: "https://vt.tiktok.com/ZS9cv96bS/",
-    title: "Floral moment VIII",
-    subtitle: "Kamelia on TikTok",
-    season: "Bridal",
-    year: "2025",
-    piece: "Bouquet",
-    description: "Hand-tied bridal bouquet — garden roses, sweet pea trails, and silk ribbon finish.",
   },
 ];

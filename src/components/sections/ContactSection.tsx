@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import { EventQuestionnaire } from "@/components/contact/EventQuestionnaire";
-import { KAMELIA_PHONE_DISPLAY, kameliaTelHref, kameliaWhatsAppHref } from "@/data/contact";
+import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref, kamelliaWhatsAppHref } from "@/data/contact";
 
 export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-24 sm:px-6 lg:px-8"
+      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
         <motion.div
@@ -37,10 +37,10 @@ export function ContactSection() {
           <p className="mt-3 max-w-xl text-sm text-[var(--color-muted)] md:max-w-2xl">
             Call or WhatsApp us on{" "}
             <a
-              href={kameliaTelHref()}
+              href={kamelliaTelHref()}
               className="font-semibold text-[var(--color-gold)] underline decoration-[var(--color-gold)]/45 underline-offset-2 hover:text-[#a88b4a]"
             >
-              {KAMELIA_PHONE_DISPLAY}
+              {KAMELLIA_PHONE_DISPLAY}
             </a>
             .
           </p>
@@ -51,7 +51,7 @@ export function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.06 }}
-          className="mt-14"
+          className="mt-8 sm:mt-10"
         >
           <EventQuestionnaire variant="embedded" />
         </motion.div>

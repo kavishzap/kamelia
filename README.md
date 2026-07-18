@@ -1,6 +1,6 @@
-# Kamelia — The Floral Designer
+# Kamellia — The Floral Designer
 
-Marketing site for **Kamelia**, a luxury floral and event styling studio in Mauritius. Built with **Next.js 15** (App Router), **React 19**, **Tailwind CSS 4**, and **Framer Motion**.
+Marketing site for **Kamellia**, a luxury floral and event styling studio in Mauritius. Built with **Next.js 15** (App Router), **React 19**, **Tailwind CSS 4**, and **Framer Motion**.
 
 The homepage presents services, a photo portfolio, a TikTok video gallery, brand story, and a multi-step **event questionnaire** that generates a branded PDF brief and links clients to WhatsApp.
 
@@ -12,7 +12,7 @@ The homepage presents services, a photo portfolio, a TikTok video gallery, brand
 - **TikTok gallery** — Square tiles with oEmbed thumbnails, in-page modal player, and per-card “View on TikTok” links
 - **Event questionnaire** — Three-step guided brief (event & venue → design & decor → budget & contact)
 - **PDF export** — Client-side brief PDF (`jsPDF`) with studio banner and structured sections
-- **WhatsApp handoff** — Deep link to Kamelia’s studio number after PDF download (client attaches the file)
+- **WhatsApp handoff** — Deep link to Kamellia’s studio number after PDF download (client attaches the file)
 - **Splash loader** — First-visit preload splash; skipped on repeat visits in the same session
 - **Responsive nav** — Fixed navbar with animated mobile menu (Escape to close, body scroll lock)
 
@@ -84,7 +84,7 @@ Section IDs match `src/data/site-nav.ts` (`#home`, `#packages`, `#portfolio`, `#
 ## Project structure
 
 ```
-kamelia/
+kamellia/
 ├── public/
 │   ├── herovideo.mp4          # Hero background video
 │   ├── banner.jpeg            # PDF header image
@@ -119,7 +119,7 @@ kamelia/
 
 - **Continue** validates the current step and scrolls to the first invalid field if needed.
 - **Generate my vision** builds and downloads a PDF, then **clears the form** while keeping contact details for WhatsApp.
-- **Send to Kamelia on WhatsApp** opens a chat with the studio number and a pre-filled message (user attaches the downloaded PDF).
+- **Send to Kamellia on WhatsApp** opens a chat with the studio number and a pre-filled message (user attaches the downloaded PDF).
 
 ### Variants
 
@@ -133,8 +133,8 @@ kamelia/
 Centralised in `src/data/contact.ts`:
 
 - Display: **+230 5775 1516**
-- `kameliaTelHref()` — `tel:` link
-- `kameliaWhatsAppHref(text?)` — `wa.me` link with optional prefill
+- `kamelliaTelHref()` — `tel:` link
+- `kamelliaWhatsAppHref(text?)` — `wa.me` link with optional prefill
 - `buildWhatsappSendPdfHref(state)` — questionnaire success handoff (in PDF module)
 
 Update the phone constants here to change footer, contact section, and WhatsApp targets site-wide.

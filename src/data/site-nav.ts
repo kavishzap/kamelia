@@ -2,9 +2,9 @@
 
 export const siteNavLinks = [
   { href: "/#home", label: "Home" },
-  { href: "/#packages", label: "Occasions" },
+  { href: "/#occasions", label: "Occasions" },
   { href: "/#portfolio", label: "Portfolio" },
-  { href: "/#gallery", label: "Gallery" },
+  { href: "/#videos", label: "Videos" },
   { href: "/#about", label: "About" },
   { href: "/#contact", label: "Plan your event" },
 ] as const;

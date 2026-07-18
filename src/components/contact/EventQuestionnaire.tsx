@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BUDGET_RANGES,
@@ -16,7 +16,7 @@ import {
   VENUE_SETTINGS,
 } from "@/data/event-questionnaire";
 import type { QState } from "@/data/questionnaire-q-state";
-import { KAMELIA_PHONE_DISPLAY, kameliaTelHref, kameliaWhatsAppHref } from "@/data/contact";
+import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref, kamelliaWhatsAppHref } from "@/data/contact";
 import { btnPrimaryClass, btnSecondaryClass } from "@/lib/button-classes";
 import {
   buildQuestionnairePdfBlob,
@@ -336,6 +336,14 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
     pendingScrollRef.current = target;
   }, []);
 
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("eventType");
+    if (!raw) return;
+    const match = EVENT_TYPES.find((t) => t.toLowerCase() === raw.toLowerCase());
+    if (!match) return;
+    setS((prev) => (prev.eventType ? prev : { ...prev, eventType: match }));
+  }, []);
+
   useLayoutEffect(() => {
     const target = pendingScrollRef.current;
     if (!target) return;
@@ -564,7 +572,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                         onClick={openWhatsappWithPdf}
                         className={`mt-3 ${btnSecondaryClass}`}
                       >
-                        Send to Kamelia on WhatsApp
+                        Send to Kamellia on WhatsApp
                       </button>
                     ) : null}
                   </div>
@@ -926,14 +934,14 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                           <p className="mt-4 text-sm leading-relaxed text-black/75">
                             Prefer to reach us directly?{" "}
                             <a
-                              href={kameliaTelHref()}
+                              href={kamelliaTelHref()}
                               className="font-semibold text-[var(--color-gold)] underline decoration-[var(--color-gold)]/45 underline-offset-2 hover:text-[#a88b4a]"
                             >
-                              Call {KAMELIA_PHONE_DISPLAY}
+                              Call {KAMELLIA_PHONE_DISPLAY}
                             </a>
                             {" · "}
                             <a
-                              href={kameliaWhatsAppHref()}
+                              href={kamelliaWhatsAppHref()}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="font-semibold text-[var(--color-gold)] underline decoration-[var(--color-gold)]/45 underline-offset-2 hover:text-[#a88b4a]"
@@ -983,7 +991,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                     onClick={openWhatsappWithPdf}
                     className={`${btnSecondaryClass} px-8`}
                   >
-                    Send to Kamelia on WhatsApp
+                    Send to Kamellia on WhatsApp
                   </button>
                 </div>
               )}

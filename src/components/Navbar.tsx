@@ -35,7 +35,7 @@ function BrandLockup() {
   return (
     <div className="flex min-w-0 flex-col justify-center leading-tight">
       <span className="font-[family-name:var(--font-display)] text-lg font-semibold text-black sm:text-xl">
-        Kamelia
+        Kamellia
       </span>
       <span className="mt-1 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.28em] text-black sm:text-xs sm:tracking-[0.32em]">
         The Floral Designer

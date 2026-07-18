@@ -1,6 +1,7 @@
 import path from "node:path";
 import fs from "node:fs/promises";
 import { SocialIcons } from "@/components/SocialIcons";
+import { ScrollSection } from "@/components/ScrollSection";
 import { PortfolioGridClient } from "@/components/sections/PortfolioGridClient";
 
 type PortfolioImage = {
@@ -30,41 +31,32 @@ export async function PortfolioSection() {
   const images = await getPortfolioImages();
 
   return (
-    <section
+    <ScrollSection
       id="portfolio"
-      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-24 sm:px-6 lg:px-8"
+      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
-        <div className="text-center">
-          <p
-            className="text-[clamp(2rem,4.2vw,3.15rem)] leading-none text-black/80"
-            style={{
-              fontFamily:
-                "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
-            }}
-          >
-            Some of our best work
-          </p>
-          <h2 className="mt-3 text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-cream)] sm:text-sm">
+        <div className="mx-auto max-w-xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-gold)] sm:text-sm">
             Gallery of work
+          </p>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2rem,3.6vw,3rem)] font-semibold leading-[1.1] text-[var(--color-cream)]">
+            Some of our best work
           </h2>
+          <p className="mt-5 text-pretty leading-relaxed text-[var(--color-muted)]">
+            A selection of stages, installations, and floral moments from recent celebrations.
+          </p>
         </div>
 
         <PortfolioGridClient images={images} />
 
-        <div className="mt-12 flex flex-col items-center gap-5 text-center">
-          <p
-            className="text-[clamp(1.4rem,3vw,2.15rem)] leading-none text-black/85"
-            style={{
-              fontFamily:
-                "ui-script, 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive",
-            }}
-          >
-            Stalk us for more on TikTok and Instagram
+        <div className="mt-8 flex flex-col items-center gap-4 text-center sm:mt-10">
+          <p className="font-[family-name:var(--font-display)] text-base font-medium text-[var(--color-cream)] sm:text-lg">
+            Follow more on Instagram and TikTok
           </p>
           <SocialIcons platforms={["instagram", "tiktok"]} variant="light" />
         </div>
       </div>
-    </section>
+    </ScrollSection>
   );
 }

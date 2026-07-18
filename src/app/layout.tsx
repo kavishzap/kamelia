@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Kamelia — The Floral Designer",
+  title: "Kamellia — The Floral Designer",
   description:
     "Luxury floral styling for weddings, engagements, mandaps, and unforgettable events.",
   icons: {

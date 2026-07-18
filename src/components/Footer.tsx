@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SocialIcons } from "@/components/SocialIcons";
-import { KAMELIA_PHONE_DISPLAY, kameliaTelHref } from "@/data/contact";
+import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref } from "@/data/contact";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -22,7 +22,7 @@ export function Footer() {
               />
               <div className="leading-tight">
                 <p className="font-[family-name:var(--font-display)] text-xl font-semibold text-white sm:text-2xl">
-                  Kamelia
+                  Kamellia
                 </p>
                 <p className="mt-1 font-[family-name:var(--font-display)] text-[0.625rem] font-medium uppercase tracking-[0.28em] text-white sm:text-xs sm:tracking-[0.32em]">
                   The Floral Designer
@@ -33,10 +33,10 @@ export function Footer() {
               Luxury floral styling for weddings, engagements, and unforgettable events across Mauritius.
             </p>
             <a
-              href={kameliaTelHref()}
+              href={kamelliaTelHref()}
               className="inline-block text-sm font-semibold tracking-wide text-white transition hover:text-[var(--color-gold)]"
             >
-              {KAMELIA_PHONE_DISPLAY}
+              {KAMELLIA_PHONE_DISPLAY}
             </a>
             <SocialIcons variant="white" platforms={["instagram", "tiktok"]} className="justify-center" />
           </div>
@@ -45,7 +45,7 @@ export function Footer() {
 
       <div className="border-t border-white/10 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-2 text-center text-xs text-white sm:text-sm">
-          <p>© {year} Kamelia — The Floral Designer. All rights reserved.</p>
+          <p>© {year} Kamellia — The Floral Designer. All rights reserved.</p>
           <p>
             Designed by <span className="font-medium text-white">Mojhoa Automations Ltd</span>
           </p>

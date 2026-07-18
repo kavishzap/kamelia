@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import { KAMELIA_PHONE_DISPLAY, KAMELIA_PHONE_DIGITS } from "@/data/contact";
+import { KAMELLIA_PHONE_DISPLAY, KAMELLIA_PHONE_DIGITS } from "@/data/contact";
 import { COLOR_SWATCHES, type ColorSwatch } from "@/data/event-questionnaire";
 import type { QState } from "@/data/questionnaire-q-state";
 
@@ -121,7 +121,7 @@ function drawDocTitle(doc: jsPDF, pageW: number, y: number) {
   setText(doc, THEME.muted);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.text("Kamelia — The Floral Designer  ·  Client planning document", MARGIN, y);
+  doc.text("Kamellia — The Floral Designer  ·  Client planning document", MARGIN, y);
 
   return y + LINE * 1.4;
 }
@@ -423,7 +423,7 @@ function drawPageFooter(doc: jsPDF, pageW: number, pageNum: number, totalPages: 
   setText(doc, THEME.muted);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  doc.text(`Kamelia — The Floral Designer  ·  ${KAMELIA_PHONE_DISPLAY}`, MARGIN, y + 8.5);
+  doc.text(`Kamellia — The Floral Designer  ·  ${KAMELLIA_PHONE_DISPLAY}`, MARGIN, y + 8.5);
   doc.text(`Page ${pageNum} of ${totalPages}`, pageW - MARGIN, y + 8.5, { align: "right" });
 }
 
@@ -503,15 +503,15 @@ export async function buildQuestionnairePdfBlob(s: QState): Promise<Blob> {
 export function defaultPdfFilename() {
   const d = new Date();
   const stamp = d.toISOString().slice(0, 10);
-  return `kamelia-event-brief-${stamp}.pdf`;
+  return `kamellia-event-brief-${stamp}.pdf`;
 }
 
-/** Opens WhatsApp chat with Kamelia (studio number), with a pre-filled message from the client. */
+/** Opens WhatsApp chat with Kamellia (studio number), with a pre-filled message from the client. */
 export function buildWhatsappSendPdfHref(s: QState): string {
   const name = s.fullName?.trim() || "Client";
   const clientPhone = s.whatsapp?.trim();
   const text = [
-    `Hi Kamelia,`,
+    `Hi Kamellia,`,
     ``,
     `I'm sending my completed *Event Styling Brief* as a PDF.`,
     clientPhone ? `My WhatsApp: ${clientPhone}` : null,
@@ -520,5 +520,5 @@ export function buildWhatsappSendPdfHref(s: QState): string {
   ]
     .filter((line): line is string => line !== null)
     .join("\n");
-  return `https://wa.me/${KAMELIA_PHONE_DIGITS}?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/${KAMELLIA_PHONE_DIGITS}?text=${encodeURIComponent(text)}`;
 }

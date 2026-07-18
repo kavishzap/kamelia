@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type MutableRefObject } from "react";
 import { runInitialLoad } from "@/lib/asset-preload";
 
 const MIN_SPLASH_MS = 700;
-const SESSION_KEY = "kamelia-splash-v2";
+const SESSION_KEY = "kamellia-splash-v2";
 
 type LoadState = {
   isReady: boolean;

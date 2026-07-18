@@ -15,7 +15,7 @@ export function SplashScreen({ progress }: SplashScreenProps) {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      aria-label="Loading Kamelia"
+      aria-label="Loading Kamellia"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -36,7 +36,7 @@ export function SplashScreen({ progress }: SplashScreenProps) {
           className="h-16 w-auto object-contain sm:h-20"
         />
         <p className="mt-5 font-[family-name:var(--font-display)] text-2xl font-semibold text-black sm:text-3xl">
-          Kamelia
+          Kamellia
         </p>
         <p className="mt-2 font-[family-name:var(--font-display)] text-[0.65rem] font-medium uppercase tracking-[0.32em] text-black sm:text-xs">
           The Floral Designer

@@ -29,7 +29,7 @@ export function SocialIcons({
           target="_blank"
           rel="noopener noreferrer"
           className={iconWrap}
-          aria-label="Kamelia on Facebook"
+          aria-label="Kamellia on Facebook"
           onClick={onNavigate}
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -43,7 +43,7 @@ export function SocialIcons({
           target="_blank"
           rel="noopener noreferrer"
           className={iconWrap}
-          aria-label="Kamelia on Instagram"
+          aria-label="Kamellia on Instagram"
           onClick={onNavigate}
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -57,7 +57,7 @@ export function SocialIcons({
           target="_blank"
           rel="noopener noreferrer"
           className={iconWrap}
-          aria-label="Kamelia on TikTok"
+          aria-label="Kamellia on TikTok"
           onClick={onNavigate}
         >
           <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
