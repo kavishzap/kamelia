@@ -5,7 +5,7 @@
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   /* Light theme tokens — cards / chrome stay clean white */
   --color-surface: #ffffff;
-  --color-surface-raised: #fff0f3;
+  --color-surface-raised: #fff7f8;
   --color-surface-card: #ffffff;
   --color-gold: #c9a962;
   --color-gold-soft: #d4bc7a;
@@ -14,21 +14,21 @@
   --color-muted: #5f5b54;
   /*
    * Page atmosphere — white → soft pastel pink (225deg).
-   * Stronger stops so the pink reads clearly behind content.
+   * Kept gentle so it reads as atmosphere, not a strong wash.
    */
   --page-gradient: linear-gradient(
     225deg,
     #ffffff 0%,
-    #ffeef1 28%,
-    #ffd0da 62%,
-    #ffb8c6 100%
+    #fff8f9 40%,
+    #ffe8ed 72%,
+    #ffd6df 100%
   );
 }
 
 html {
   scroll-behavior: smooth;
   min-height: 100%;
-  background-color: #ffb8c6;
+  background-color: #ffd6df;
 }
 
 body {
@@ -47,7 +47,7 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image: var(--page-gradient);
-  background-color: #ffb8c6;
+  background-color: #ffd6df;
 }
 
 ::selection {
