@@ -166,5 +166,11 @@ export const BUDGET_RANGES = [
 
 export const VENUE_SETTINGS = ["Indoor", "Outdoor", "Both"] as const;
 
+export const PACKAGE_OPTIONS = [
+  "Package 1 — Rs 60,000",
+  "Package 2 — Rs 80,000",
+  "Package 3 — Rs 100,000",
+] as const;
+
 /** Max selections for decor priorities (subset of decor areas). */
 export const DECOR_PRIORITY_MAX = 3;

@@ -1,23 +1,14 @@
-/** Shared form state for Event Questionnaire + PDF export */
+/** Shared form state for Event Questionnaire + WhatsApp handoff */
 
 export type QState = {
+  fullName: string;
+  email: string;
+  phone: string;
   eventType: string;
   eventDate: string;
   eventTime: string;
-  guestCount: string;
   venueName: string;
   venueSetting: string;
-  themeStyle: string;
-  colors: string[];
-  decorAreas: string[];
-  decorElements: string[];
-  decorPriorities: string[];
-  floralPrefs: string[];
-  budget: string;
-  inspirationLinks: string;
-  culturalNotes: string;
-  memorableMoment: string;
-  notes: string;
-  fullName: string;
-  whatsapp: string;
+  packageOption: string;
+  specialRequests: string;
 };
