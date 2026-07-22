@@ -1,8 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { REVIEWS, type Review } from "@/data/reviews";
+
+const AUTO_MS = 2000;
+/** Three copies so we can always slide forward and snap back invisibly */
+const LOOP = [...REVIEWS, ...REVIEWS, ...REVIEWS];
+const LEN = REVIEWS.length;
+const START = LEN; // middle copy
 
 function StarRow({ rating }: { rating: number }) {
   return (
@@ -29,9 +35,9 @@ function StarRow({ rating }: { rating: number }) {
   );
 }
 
-function ReviewSlide({ review }: { review: Review }) {
+function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="flex h-full flex-col">
+    <article className="flex h-full flex-col border border-black/8 bg-[var(--color-surface-raised)] px-5 py-5 sm:px-6 sm:py-6">
       <StarRow rating={review.rating} />
       <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--color-muted)] sm:text-[0.9375rem]">
         “{review.quote}”
@@ -45,65 +51,99 @@ function ReviewSlide({ review }: { review: Review }) {
 }
 
 export function ReviewsCarousel() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(START);
+  const [slideW, setSlideW] = useState(0);
+  const [gap, setGap] = useState(16);
+  const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
+  const indexRef = useRef(START);
+  indexRef.current = index;
 
-  const scrollToIndex = useCallback((index: number) => {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-    const slides = scroller.querySelectorAll<HTMLElement>("[data-review-slide]");
-    const target = slides[index];
-    if (!target) return;
-    const left = target.offsetLeft - (scroller.clientWidth - target.clientWidth) / 2;
-    scroller.scrollTo({ left, behavior: "smooth" });
+  const measure = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const first = track.querySelector<HTMLElement>("[data-review-slide]");
+    if (!first) return;
+    const styles = window.getComputedStyle(track);
+    const g = Number.parseFloat(styles.columnGap || styles.gap || "16") || 16;
+    setGap(g);
+    setSlideW(first.getBoundingClientRect().width);
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(viewport);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
+
+  /** Keep index in the middle copy so neighbors always exist (no blank) */
+  const normalize = useCallback((i: number) => {
+    if (i < LEN) return i + LEN;
+    if (i >= LEN * 2) return i - LEN;
+    return i;
+  }, []);
+
+  const jumpTo = useCallback(
+    (i: number) => {
+      setAnimate(false);
+      setIndex(normalize(i));
+    },
+    [normalize],
+  );
+
+  // After a non-animated jump, re-enable animation on next frame
+  useLayoutEffect(() => {
+    if (animate) return;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setAnimate(true));
+    });
+    return () => cancelAnimationFrame(id);
+  }, [animate, index]);
+
+  // When we land outside the middle band after an animated move, snap back
+  useEffect(() => {
+    if (!animate) return;
+    if (index >= LEN && index < LEN * 2) return;
+    const t = window.setTimeout(() => jumpTo(index), 420);
+    return () => window.clearTimeout(t);
+  }, [index, animate, jumpTo]);
+
+  const goTo = useCallback((next: number, withAnimation = true) => {
+    if (!withAnimation) {
+      setAnimate(false);
+      setIndex(next);
+      return;
+    }
+    setAnimate(true);
+    setIndex(next);
   }, []);
 
   const go = useCallback(
     (delta: number) => {
-      const next = (active + delta + REVIEWS.length) % REVIEWS.length;
-      scrollToIndex(next);
-      setActive(next);
+      goTo(indexRef.current + delta, true);
     },
-    [active, scrollToIndex],
+    [goTo],
   );
-
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const onScroll = () => {
-      const slides = scroller.querySelectorAll<HTMLElement>("[data-review-slide]");
-      if (!slides.length) return;
-      const center = scroller.scrollLeft + scroller.clientWidth / 2;
-      let best = 0;
-      let bestDist = Infinity;
-      slides.forEach((slide, i) => {
-        const mid = slide.offsetLeft + slide.clientWidth / 2;
-        const dist = Math.abs(mid - center);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = i;
-        }
-      });
-      setActive(best);
-    };
-
-    scroller.addEventListener("scroll", onScroll, { passive: true });
-    return () => scroller.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     if (paused) return;
     const id = window.setInterval(() => {
-      setActive((current) => {
-        const next = (current + 1) % REVIEWS.length;
-        scrollToIndex(next);
-        return next;
-      });
-    }, 5200);
+      goTo(indexRef.current + 1, true);
+    }, AUTO_MS);
     return () => window.clearInterval(id);
-  }, [paused, scrollToIndex]);
+  }, [paused, goTo]);
+
+  const offset = slideW > 0 ? index * (slideW + gap) : 0;
+  const logical = ((index % LEN) + LEN) % LEN;
 
   return (
     <motion.div
@@ -112,15 +152,9 @@ export function ReviewsCarousel() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
       className="mb-10 sm:mb-12"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
-      }}
       onTouchStart={() => setPaused(true)}
       onTouchEnd={() => {
-        window.setTimeout(() => setPaused(false), 4000);
+        window.setTimeout(() => setPaused(false), 2000);
       }}
     >
       <div className="flex items-end justify-between gap-4">
@@ -130,7 +164,7 @@ export function ReviewsCarousel() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            aria-label="Previous review"
+            aria-label="Previous reviews"
             onClick={() => go(-1)}
             className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
           >
@@ -140,7 +174,7 @@ export function ReviewsCarousel() {
           </button>
           <button
             type="button"
-            aria-label="Next review"
+            aria-label="Next reviews"
             onClick={() => go(1)}
             className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
           >
@@ -152,45 +186,63 @@ export function ReviewsCarousel() {
       </div>
 
       <div
-        ref={scrollerRef}
-        className="-mx-4 mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-0 sm:gap-5 sm:px-0 [&::-webkit-scrollbar]:hidden"
+        ref={viewportRef}
+        className="relative mt-5 overflow-hidden"
         role="region"
         aria-roledescription="carousel"
         aria-label="Client reviews"
       >
-        {REVIEWS.map((review, index) => (
-          <div
-            key={review.name}
-            data-review-slide
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${REVIEWS.length}`}
-            className="w-[min(85vw,22rem)] shrink-0 snap-center sm:w-[min(48%,24rem)] lg:w-[min(32%,26rem)]"
-          >
-            <div className="h-full border border-black/8 bg-[var(--color-surface-raised)] px-5 py-5 sm:px-6 sm:py-6">
-              <ReviewSlide review={review} />
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-[var(--color-surface)] to-transparent sm:w-8"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-[var(--color-surface)] to-transparent sm:w-8"
+          aria-hidden
+        />
+
+        <motion.div
+          ref={trackRef}
+          className="flex gap-4 sm:gap-5"
+          animate={{ x: -offset }}
+          transition={
+            animate
+              ? { type: "spring", stiffness: 280, damping: 34 }
+              : { duration: 0 }
+          }
+          drag="x"
+          dragElastic={0.06}
+          onDragStart={() => setPaused(true)}
+          onDragEnd={(_, info) => {
+            const step = slideW + gap || 1;
+            const delta = Math.round((-info.offset.x - info.velocity.x * 0.12) / step);
+            goTo(indexRef.current + (delta === 0 ? (info.offset.x < 0 ? 1 : info.offset.x > 0 ? -1 : 0) : delta), true);
+            window.setTimeout(() => setPaused(false), 2000);
+          }}
+        >
+          {LOOP.map((review, i) => (
+            <div
+              key={`${review.name}-${i}`}
+              data-review-slide
+              className="w-[min(82vw,20.5rem)] shrink-0 sm:w-[min(48%,22rem)] lg:w-[min(34%,24rem)]"
+            >
+              <ReviewCard review={review} />
             </div>
-          </div>
-        ))}
+          ))}
+        </motion.div>
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Review slides">
-        {REVIEWS.map((review, index) => (
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {REVIEWS.map((review, i) => (
           <button
             key={review.name}
             type="button"
-            role="tab"
-            aria-selected={active === index}
-            aria-label={`Go to review ${index + 1}`}
-            onClick={() => {
-              scrollToIndex(index);
-              setActive(index);
-            }}
+            aria-label={`Go to review ${i + 1}`}
+            aria-current={i === logical}
+            onClick={() => goTo(START + i, true)}
             className={[
               "h-1.5 transition-all",
-              active === index
-                ? "w-6 bg-[var(--color-gold)]"
-                : "w-1.5 bg-black/20 hover:bg-black/35",
+              i === logical ? "w-6 bg-[var(--color-gold)]" : "w-1.5 bg-black/20 hover:bg-black/35",
             ].join(" ")}
           />
         ))}
