@@ -32,7 +32,7 @@ export async function PortfolioSection() {
   return (
     <ScrollSection
       id="portfolio"
-      className="relative scroll-mt-24 bg-transparent px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
+      className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
         <div className="mx-auto max-w-xl text-center">

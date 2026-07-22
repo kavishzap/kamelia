@@ -11,8 +11,7 @@ export function SplashScreen({ progress }: SplashScreenProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center px-6"
-      style={{ backgroundImage: "var(--page-gradient)" }}
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[var(--color-surface)] px-6"
       role="status"
       aria-live="polite"
       aria-busy="true"

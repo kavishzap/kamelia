@@ -46,7 +46,7 @@ export function AboutSection() {
   return (
     <ScrollSection
       id="about"
-      className="relative scroll-mt-24 overflow-hidden bg-transparent px-4 py-10 sm:px-6 sm:py-12 lg:px-8"
+      className="relative scroll-mt-24 overflow-hidden bg-[var(--color-surface)] px-4 py-10 sm:px-6 sm:py-12 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
         {/* Height is driven by the left column; images fill that same height on desktop */}

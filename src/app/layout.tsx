@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffd6df",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
@@ -41,7 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${cormorant.variable} ${dmSans.variable}`}
+      className={`bg-[var(--color-surface)] ${cormorant.variable} ${dmSans.variable}`}
     >
       <head>
         <link rel="preload" href="/logo_black.png" as="image" type="image/png" />

@@ -11,7 +11,7 @@ import { ContactSection } from "@/components/sections/ContactSection";
 export default function Home() {
   return (
     <SiteLoader>
-      <main className="min-h-screen snap-y snap-proximity bg-transparent">
+      <main className="min-h-screen snap-y snap-proximity bg-[var(--color-surface)]">
         <Navbar />
         <HeroScroll />
         <PackagesSection />

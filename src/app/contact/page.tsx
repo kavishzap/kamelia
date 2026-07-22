@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-transparent">
+    <main className="min-h-screen bg-[var(--color-surface)]">
       <Navbar />
       <div className="mx-auto flex max-w-lg flex-col items-center gap-6 px-6 py-28 text-center sm:py-36">
         <p className="font-[family-name:var(--font-display)] text-sm uppercase tracking-[0.35em] text-[var(--color-gold)]">
