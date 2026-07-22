@@ -3,9 +3,9 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { EventQuestionnaire } from "@/components/contact/EventQuestionnaire";
+import { ReviewsCarousel } from "@/components/contact/ReviewsCarousel";
 import { ScrollSection } from "@/components/ScrollSection";
 import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref } from "@/data/contact";
-import { REVIEWS } from "@/data/reviews";
 
 const PackagesFlipbook = dynamic(
   () =>
@@ -20,31 +20,6 @@ const PackagesFlipbook = dynamic(
   },
 );
 
-function StarRow({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
-      {Array.from({ length: 5 }, (_, i) => {
-        const filled = i < rating;
-        return (
-          <svg
-            key={i}
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            aria-hidden
-            className={filled ? "text-[var(--color-gold)]" : "text-black/15"}
-          >
-            <path
-              fill="currentColor"
-              d="M12 2.8l2.6 6.4 6.9.6-5.2 4.5 1.6 6.7L12 17.6 6.1 21l1.6-6.7L2.5 9.8l6.9-.6L12 2.8z"
-            />
-          </svg>
-        );
-      })}
-    </div>
-  );
-}
-
 export function ContactSection() {
   return (
     <ScrollSection
@@ -52,40 +27,7 @@ export function ContactSection() {
       className="relative scroll-mt-24 bg-[var(--color-surface)] px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
       <div className="mx-auto max-w-[1400px]">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="mb-10 sm:mb-12"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-gold)] sm:text-sm">
-            Kind words
-          </p>
-          <ul className="mt-5 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {REVIEWS.map((review, index) => (
-              <motion.li
-                key={review.name}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: index * 0.06 }}
-                className="min-w-0"
-              >
-                <StarRow rating={review.rating} />
-                <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-                  “{review.quote}”
-                </p>
-                <p className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[var(--color-cream)]">
-                  {review.name}
-                </p>
-                <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-black/45">
-                  {review.role}
-                </p>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
+        <ReviewsCarousel />
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
