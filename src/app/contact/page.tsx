@@ -5,8 +5,10 @@ import { btnPrimaryClass } from "@/lib/button-classes";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Plan your event — Kamellia",
-  description: "Plan your event with Kamellia. The event questionnaire lives on our homepage.",
+  title: "Plan your event",
+  description:
+    "Plan your wedding or event floral styling with Kamellia. Open the questionnaire on our homepage to send your request.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

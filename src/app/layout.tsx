@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { SiteJsonLd } from "@/components/SiteJsonLd";
+import { buildRootMetadata } from "@/lib/seo";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -16,16 +18,7 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Kamellia — The Floral Designer",
-  description:
-    "Luxury floral styling for weddings, engagements, mandaps, and unforgettable events.",
-  icons: {
-    icon: [{ url: "/logo_black.png", type: "image/png" }],
-    shortcut: "/logo_black.png",
-    apple: "/logo_black.png",
-  },
-};
+export const metadata: Metadata = buildRootMetadata();
 
 export const viewport: Viewport = {
   themeColor: "#ffffff",
@@ -44,6 +37,7 @@ export default function RootLayout({
       className={`bg-[var(--color-surface)] ${cormorant.variable} ${dmSans.variable}`}
     >
       <head>
+        <SiteJsonLd />
         <link rel="preload" href="/logo_black.png" as="image" type="image/png" />
         <link rel="preload" href="/herovideo.mp4" as="video" type="video/mp4" />
       </head>
