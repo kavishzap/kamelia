@@ -1,12 +1,28 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { EventQuestionnaire } from "@/components/contact/EventQuestionnaire";
-import { PackagesBrochureLink } from "@/components/contact/PackagesBrochureLink";
 import { ReviewForm } from "@/components/contact/ReviewForm";
 import { ReviewsCarousel } from "@/components/contact/ReviewsCarousel";
 import { ScrollSection } from "@/components/ScrollSection";
 import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref } from "@/data/contact";
+import { btnPrimaryClass } from "@/lib/button-classes";
+
+const PackagesBrochureLink = dynamic(
+  () =>
+    import("@/components/contact/PackagesBrochureLink").then((m) => m.PackagesBrochureLink),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mt-6">
+        <button type="button" disabled className={btnPrimaryClass}>
+          View packages brochure
+        </button>
+      </div>
+    ),
+  },
+);
 
 export function ContactSection() {
   return (

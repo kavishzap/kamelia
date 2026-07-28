@@ -3,15 +3,18 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { btnPrimaryClass, btnSecondaryClass } from "@/lib/button-classes";
-
-GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 const PDF_URL = "/packages.pdf";
 const ZOOM_MIN = 0.6;
 const ZOOM_MAX = 2.5;
 const ZOOM_STEP = 0.25;
+
+async function loadPdfJs() {
+  const pdfjs = await import("pdfjs-dist");
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+  return pdfjs;
+}
 
 function IconBtn({
   label,
@@ -73,14 +76,16 @@ function PackagesPdfModal({ open, onClose }: { open: boolean; onClose: () => voi
     if (pages.length) return;
 
     let cancelled = false;
-    let loadingTask: ReturnType<typeof getDocument> | null = null;
+    let loadingTask: { destroy: () => Promise<void> } | null = null;
 
     (async () => {
       setLoading(true);
       setError(null);
       try {
-        loadingTask = getDocument({ url: PDF_URL, withCredentials: false });
-        const pdf = await loadingTask.promise;
+        const pdfjs = await loadPdfJs();
+        const task = pdfjs.getDocument({ url: PDF_URL, withCredentials: false });
+        loadingTask = task;
+        const pdf = await task.promise;
         if (cancelled) return;
 
         const total = pdf.numPages;
