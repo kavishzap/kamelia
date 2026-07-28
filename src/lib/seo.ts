@@ -67,6 +67,9 @@ export function buildRootMetadata(): Metadata {
       shortcut: "/logo_black.png",
       apple: "/logo_black.png",
     },
+    verification: {
+      google: "7aTlYNJu7AvkYi7_gsAjDiqoQdfn3rpFvbyCHOpA-UU",
+    },
   };
 }
 
