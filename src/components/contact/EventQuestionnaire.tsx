@@ -11,7 +11,6 @@ import {
 import type { QState } from "@/data/questionnaire-q-state";
 import { btnPrimaryClass } from "@/lib/button-classes";
 import {
-  createRequestId,
   RequestConfirmModal,
   RequestSuccessModal,
 } from "@/components/contact/RequestModals";
@@ -207,6 +206,8 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [requestId, setRequestId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     const raw = new URLSearchParams(window.location.search).get("eventType");
@@ -235,16 +236,50 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
       return;
     }
     setFormError(null);
+    setSubmitError(null);
     setConfirmOpen(true);
   }, [s]);
 
-  const handleConfirmSend = useCallback(() => {
-    const id = createRequestId();
-    setRequestId(id);
-    setConfirmOpen(false);
-    // UI-only for now — back-office API will be wired later
-    setSuccessOpen(true);
-  }, []);
+  const handleConfirmSend = useCallback(async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch("/api/event-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: s.fullName.trim(),
+          phone: s.phone.trim(),
+          email: s.email.trim(),
+          eventType: s.eventType.trim(),
+          eventDate: s.eventDate,
+          eventTime: s.eventTime.trim(),
+          venueLocation: s.venueName.trim(),
+          setting: s.venueSetting.trim(),
+          packages: s.packageOption.trim(),
+          specialRequests: s.specialRequests.trim(),
+        }),
+      });
+
+      const payload = (await res.json().catch(() => null)) as {
+        requestCode?: string;
+        error?: string;
+      } | null;
+
+      if (!res.ok) {
+        throw new Error(payload?.error || "We couldn’t send your request. Please try again.");
+      }
+
+      setRequestId(payload?.requestCode || "—");
+      setConfirmOpen(false);
+      setSuccessOpen(true);
+      setS(emptyQState());
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "We couldn’t send your request.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [s]);
 
   return (
     <motion.div
@@ -414,8 +449,14 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
 
       <RequestConfirmModal
         open={confirmOpen}
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={handleConfirmSend}
+        loading={submitting}
+        error={submitError}
+        onCancel={() => {
+          if (submitting) return;
+          setConfirmOpen(false);
+          setSubmitError(null);
+        }}
+        onConfirm={() => void handleConfirmSend()}
       />
       <RequestSuccessModal
         open={successOpen}

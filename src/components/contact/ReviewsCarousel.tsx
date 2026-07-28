@@ -1,18 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { REVIEWS, type Review } from "@/data/reviews";
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import type { Review } from "@/data/reviews";
 
 const AUTO_MS = 2000;
-/** Three copies so we can always slide forward and snap back invisibly */
-const LOOP = [...REVIEWS, ...REVIEWS, ...REVIEWS];
-const LEN = REVIEWS.length;
-const START = LEN; // middle copy
 
 function StarRow({ rating }: { rating: number }) {
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex justify-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => {
         const filled = i < rating;
         return (
@@ -37,113 +33,52 @@ function StarRow({ rating }: { rating: number }) {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="flex h-full flex-col border border-black/8 bg-[var(--color-surface-raised)] px-5 py-5 sm:px-6 sm:py-6">
+    <article className="mx-auto flex w-full max-w-xl flex-col border border-black/8 bg-[var(--color-surface-raised)] px-5 py-6 text-center sm:px-8 sm:py-8">
       <StarRow rating={review.rating} />
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--color-muted)] sm:text-[0.9375rem]">
-        “{review.quote}”
+      <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)] sm:text-base">
+        “{review.message}”
       </p>
-      <p className="mt-5 font-[family-name:var(--font-display)] text-base font-semibold text-[var(--color-cream)]">
+      <p className="mt-5 font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-cream)]">
         {review.name}
       </p>
-      <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-black/45">{review.role}</p>
     </article>
   );
 }
 
-export function ReviewsCarousel() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(START);
-  const [slideW, setSlideW] = useState(0);
-  const [gap, setGap] = useState(16);
-  const [animate, setAnimate] = useState(true);
+function ReviewsTrack({ reviews }: { reviews: Review[] }) {
+  const len = reviews.length;
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
-  const indexRef = useRef(START);
-  indexRef.current = index;
 
-  const measure = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const first = track.querySelector<HTMLElement>("[data-review-slide]");
-    if (!first) return;
-    const styles = window.getComputedStyle(track);
-    const g = Number.parseFloat(styles.columnGap || styles.gap || "16") || 16;
-    setGap(g);
-    setSlideW(first.getBoundingClientRect().width);
-  }, []);
-
-  useEffect(() => {
-    measure();
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const ro = new ResizeObserver(() => measure());
-    ro.observe(viewport);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [measure]);
-
-  /** Keep index in the middle copy so neighbors always exist (no blank) */
-  const normalize = useCallback((i: number) => {
-    if (i < LEN) return i + LEN;
-    if (i >= LEN * 2) return i - LEN;
-    return i;
-  }, []);
-
-  const jumpTo = useCallback(
-    (i: number) => {
-      setAnimate(false);
-      setIndex(normalize(i));
+  const goTo = useCallback(
+    (next: number, dir: number) => {
+      const n = ((next % len) + len) % len;
+      setDirection(dir);
+      setIndex(n);
     },
-    [normalize],
+    [len],
   );
-
-  // After a non-animated jump, re-enable animation on next frame
-  useLayoutEffect(() => {
-    if (animate) return;
-    const id = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setAnimate(true));
-    });
-    return () => cancelAnimationFrame(id);
-  }, [animate, index]);
-
-  // When we land outside the middle band after an animated move, snap back
-  useEffect(() => {
-    if (!animate) return;
-    if (index >= LEN && index < LEN * 2) return;
-    const t = window.setTimeout(() => jumpTo(index), 420);
-    return () => window.clearTimeout(t);
-  }, [index, animate, jumpTo]);
-
-  const goTo = useCallback((next: number, withAnimation = true) => {
-    if (!withAnimation) {
-      setAnimate(false);
-      setIndex(next);
-      return;
-    }
-    setAnimate(true);
-    setIndex(next);
-  }, []);
 
   const go = useCallback(
     (delta: number) => {
-      goTo(indexRef.current + delta, true);
+      goTo(index + delta, delta >= 0 ? 1 : -1);
     },
-    [goTo],
+    [goTo, index],
   );
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || len < 2) return;
     const id = window.setInterval(() => {
-      goTo(indexRef.current + 1, true);
+      setIndex((current) => {
+        setDirection(1);
+        return (current + 1) % len;
+      });
     }, AUTO_MS);
     return () => window.clearInterval(id);
-  }, [paused, goTo]);
+  }, [paused, len]);
 
-  const offset = slideW > 0 ? index * (slideW + gap) : 0;
-  const logical = ((index % LEN) + LEN) % LEN;
+  const review = reviews[index];
 
   return (
     <motion.div
@@ -161,92 +96,105 @@ export function ReviewsCarousel() {
         <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[var(--color-gold)] sm:text-sm">
           Kind words
         </p>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label="Previous reviews"
-            onClick={() => go(-1)}
-            className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M15 6l-6 6 6 6" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            aria-label="Next reviews"
-            onClick={() => go(1)}
-            className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
+        {len > 1 ? (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Previous review"
+              onClick={() => go(-1)}
+              className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 6l-6 6 6 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-label="Next review"
+              onClick={() => go(1)}
+              className="inline-flex h-9 w-9 items-center justify-center border border-black/15 bg-white text-black transition hover:border-[var(--color-gold)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div
-        ref={viewportRef}
         className="relative mt-5 overflow-hidden"
         role="region"
         aria-roledescription="carousel"
         aria-label="Client reviews"
+        aria-live="polite"
       >
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-[var(--color-surface)] to-transparent sm:w-8"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-[var(--color-surface)] to-transparent sm:w-8"
-          aria-hidden
-        />
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <motion.div
+            key={review.id}
+            custom={direction}
+            initial={{ opacity: 0, x: direction > 0 ? 36 : -36 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction > 0 ? -36 : 36 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            drag={len > 1 ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.12}
+            onDragStart={() => setPaused(true)}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -56 || info.velocity.x < -400) go(1);
+              else if (info.offset.x > 56 || info.velocity.x > 400) go(-1);
+              window.setTimeout(() => setPaused(false), 2000);
+            }}
+            className="mx-auto w-full max-w-xl cursor-default touch-pan-y"
+          >
+            <ReviewCard review={review} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-        <motion.div
-          ref={trackRef}
-          className="flex gap-4 sm:gap-5"
-          animate={{ x: -offset }}
-          transition={
-            animate
-              ? { type: "spring", stiffness: 280, damping: 34 }
-              : { duration: 0 }
-          }
-          drag="x"
-          dragElastic={0.06}
-          onDragStart={() => setPaused(true)}
-          onDragEnd={(_, info) => {
-            const step = slideW + gap || 1;
-            const delta = Math.round((-info.offset.x - info.velocity.x * 0.12) / step);
-            goTo(indexRef.current + (delta === 0 ? (info.offset.x < 0 ? 1 : info.offset.x > 0 ? -1 : 0) : delta), true);
-            window.setTimeout(() => setPaused(false), 2000);
-          }}
-        >
-          {LOOP.map((review, i) => (
-            <div
-              key={`${review.name}-${i}`}
-              data-review-slide
-              className="w-[min(82vw,20.5rem)] shrink-0 sm:w-[min(48%,22rem)] lg:w-[min(34%,24rem)]"
-            >
-              <ReviewCard review={review} />
-            </div>
+      {len > 1 ? (
+        <div className="mt-4 flex items-center justify-center gap-2">
+          {reviews.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-label={`Go to review ${i + 1}`}
+              aria-current={i === index}
+              onClick={() => goTo(i, i > index ? 1 : -1)}
+              className={[
+                "h-1.5 transition-all",
+                i === index ? "w-6 bg-[var(--color-gold)]" : "w-1.5 bg-black/20 hover:bg-black/35",
+              ].join(" ")}
+            />
           ))}
-        </motion.div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-center gap-2">
-        {REVIEWS.map((review, i) => (
-          <button
-            key={review.name}
-            type="button"
-            aria-label={`Go to review ${i + 1}`}
-            aria-current={i === logical}
-            onClick={() => goTo(START + i, true)}
-            className={[
-              "h-1.5 transition-all",
-              i === logical ? "w-6 bg-[var(--color-gold)]" : "w-1.5 bg-black/20 hover:bg-black/35",
-            ].join(" ")}
-          />
-        ))}
-      </div>
+        </div>
+      ) : null}
     </motion.div>
   );
+}
+
+export function ReviewsCarousel() {
+  const [reviews, setReviews] = useState<Review[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        const payload = (await res.json().catch(() => null)) as { reviews?: Review[] } | null;
+        if (cancelled) return;
+        setReviews(Array.isArray(payload?.reviews) ? payload.reviews : []);
+      } catch {
+        if (!cancelled) setReviews([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!reviews || reviews.length === 0) return null;
+
+  return <ReviewsTrack reviews={reviews} />;
 }

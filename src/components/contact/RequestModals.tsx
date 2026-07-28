@@ -7,16 +7,24 @@ import { btnPrimaryClass, btnSecondaryClass } from "@/lib/button-classes";
 
 type ConfirmModalProps = {
   open: boolean;
+  loading?: boolean;
+  error?: string | null;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-export function RequestConfirmModal({ open, onCancel, onConfirm }: ConfirmModalProps) {
+export function RequestConfirmModal({
+  open,
+  loading = false,
+  error = null,
+  onCancel,
+  onConfirm,
+}: ConfirmModalProps) {
   const titleId = useId();
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || loading) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onCancel();
     };
@@ -28,7 +36,7 @@ export function RequestConfirmModal({ open, onCancel, onConfirm }: ConfirmModalP
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, onCancel]);
+  }, [open, loading, onCancel]);
 
   if (typeof document === "undefined") return null;
 
@@ -47,7 +55,9 @@ export function RequestConfirmModal({ open, onCancel, onConfirm }: ConfirmModalP
             type="button"
             aria-label="Cancel"
             className="absolute inset-0 bg-black/45 backdrop-blur-[2px]"
-            onClick={onCancel}
+            onClick={() => {
+              if (!loading) onCancel();
+            }}
           />
           <motion.div
             role="dialog"
@@ -69,19 +79,27 @@ export function RequestConfirmModal({ open, onCancel, onConfirm }: ConfirmModalP
               Send this request to Kamellia?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-              We’ll submit your details and give you a request ID to keep for your records.
+              We’ll submit your details to our studio and give you a request ID to keep for your
+              records.
             </p>
+            {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-              <button type="button" onClick={onCancel} className={btnSecondaryClass}>
+              <button
+                type="button"
+                onClick={onCancel}
+                disabled={loading}
+                className={btnSecondaryClass}
+              >
                 Not yet
               </button>
               <button
                 ref={confirmRef}
                 type="button"
                 onClick={onConfirm}
+                disabled={loading}
                 className={btnPrimaryClass}
               >
-                Yes, send
+                {loading ? "Sending…" : "Yes, send"}
               </button>
             </div>
           </motion.div>
@@ -205,17 +223,4 @@ export function RequestSuccessModal({ open, requestId, onDone }: SuccessModalPro
     </AnimatePresence>,
     document.body,
   );
-}
-
-/** Sequential client-side IDs: #KAM001, #KAM002, … */
-export function createRequestId(): string {
-  const key = "kamellia-request-seq";
-  let n = 1;
-  try {
-    n = Number(window.localStorage.getItem(key) || "0") + 1;
-    window.localStorage.setItem(key, String(n));
-  } catch {
-    n = Date.now() % 1000 || 1;
-  }
-  return `#KAM${String(n).padStart(3, "0")}`;
 }

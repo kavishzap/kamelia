@@ -1,24 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { EventQuestionnaire } from "@/components/contact/EventQuestionnaire";
+import { PackagesBrochureLink } from "@/components/contact/PackagesBrochureLink";
+import { ReviewForm } from "@/components/contact/ReviewForm";
 import { ReviewsCarousel } from "@/components/contact/ReviewsCarousel";
 import { ScrollSection } from "@/components/ScrollSection";
 import { KAMELLIA_PHONE_DISPLAY, kamelliaTelHref } from "@/data/contact";
-
-const PackagesFlipbook = dynamic(
-  () =>
-    import("@/components/contact/PackagesFlipbook").then((m) => m.PackagesFlipbook),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex min-h-[280px] items-center justify-center bg-[#f3eee6] ring-1 ring-black/8">
-        <p className="text-sm text-[var(--color-muted)]">Opening packages brochure…</p>
-      </div>
-    ),
-  },
-);
 
 export function ContactSection() {
   return (
@@ -55,16 +43,7 @@ export function ContactSection() {
             </a>
             .
           </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.04 }}
-          className="mt-8 sm:mt-10"
-        >
-          <PackagesFlipbook />
+          <PackagesBrochureLink />
         </motion.div>
 
         <motion.div
@@ -76,6 +55,8 @@ export function ContactSection() {
         >
           <EventQuestionnaire variant="embedded" />
         </motion.div>
+
+        <ReviewForm />
       </div>
     </ScrollSection>
   );
