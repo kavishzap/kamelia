@@ -10,5 +10,6 @@ export type QState = {
   venueName: string;
   venueSetting: string;
   packageOption: string;
+  customBudget: string;
   specialRequests: string;
 };

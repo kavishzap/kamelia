@@ -4,8 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   EVENT_TIMES,
-  EVENT_TYPES,
-  PACKAGE_OPTIONS,
+  PACKAGE_CUSTOM_BUDGET,
   VENUE_SETTINGS,
 } from "@/data/event-questionnaire";
 import type { QState } from "@/data/questionnaire-q-state";
@@ -28,6 +27,7 @@ function emptyQState(): QState {
     venueName: "",
     venueSetting: "",
     packageOption: "",
+    customBudget: "",
     specialRequests: "",
   };
 }
@@ -98,22 +98,34 @@ function SelectField({
   invalid?: boolean;
 }) {
   return (
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      aria-invalid={invalid || undefined}
-      className={fieldClass(invalid, Boolean(value))}
-    >
-      <option value="" disabled>
-        {placeholder}
-      </option>
-      {options.map((opt) => (
-        <option key={opt} value={opt} className="text-black">
-          {opt}
+    <div className="relative">
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-invalid={invalid || undefined}
+        className={`${fieldClass(invalid, Boolean(value))} cursor-pointer pr-11`}
+      >
+        <option value="" disabled>
+          {placeholder}
         </option>
-      ))}
-    </select>
+        {options.map((opt) => (
+          <option key={opt} value={opt} className="text-black">
+            {opt}
+          </option>
+        ))}
+      </select>
+      <svg
+        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-black/45"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden
+      >
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </div>
   );
 }
 
@@ -191,7 +203,21 @@ function validate(s: QState): FieldErrors {
   if (!s.venueName.trim()) errors.venueName = "Please enter your venue location.";
   if (!s.venueSetting.trim()) errors.venueSetting = "Please select indoor, outdoor, or both.";
   if (!s.packageOption.trim()) errors.packageOption = "Please select a package.";
+  else if (s.packageOption === PACKAGE_CUSTOM_BUDGET) {
+    const budget = s.customBudget.replace(/[^\d]/g, "");
+    if (!budget) errors.customBudget = "Please enter your budget.";
+    else if (Number(budget) < 1) errors.customBudget = "Please enter a valid budget amount.";
+  }
   return errors;
+}
+
+function formatPackagePayload(s: QState): string {
+  if (s.packageOption === PACKAGE_CUSTOM_BUDGET) {
+    const digits = s.customBudget.replace(/[^\d]/g, "");
+    const amount = digits ? Number(digits).toLocaleString("en-US") : s.customBudget.trim();
+    return `${PACKAGE_CUSTOM_BUDGET} — Rs ${amount}`;
+  }
+  return s.packageOption.trim();
 }
 
 type EventQuestionnaireProps = {
@@ -205,17 +231,57 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
   const [formError, setFormError] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [requestId, setRequestId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [packageNames, setPackageNames] = useState<string[]>([]);
+  const [eventTypes, setEventTypes] = useState<string[]>([]);
+
+  const packageOptions = [...packageNames, PACKAGE_CUSTOM_BUDGET];
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [packagesRes, typesRes] = await Promise.all([
+          fetch("/api/packages"),
+          fetch("/api/event-types"),
+        ]);
+        const packagesPayload = (await packagesRes.json().catch(() => null)) as
+          | { packages?: { name: string }[] }
+          | null;
+        const typesPayload = (await typesRes.json().catch(() => null)) as
+          | { eventTypes?: { name: string }[] }
+          | null;
+        if (cancelled) return;
+        setPackageNames(
+          Array.isArray(packagesPayload?.packages)
+            ? packagesPayload.packages.map((p) => p.name).filter(Boolean)
+            : [],
+        );
+        setEventTypes(
+          Array.isArray(typesPayload?.eventTypes)
+            ? typesPayload.eventTypes.map((t) => t.name).filter(Boolean)
+            : [],
+        );
+      } catch {
+        if (!cancelled) {
+          setPackageNames([]);
+          setEventTypes([]);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const raw = new URLSearchParams(window.location.search).get("eventType");
-    if (!raw) return;
-    const match = EVENT_TYPES.find((t) => t.toLowerCase() === raw.toLowerCase());
+    if (!raw || !eventTypes.length) return;
+    const match = eventTypes.find((t) => t.toLowerCase() === raw.toLowerCase());
     if (!match) return;
     setS((prev) => (prev.eventType ? prev : { ...prev, eventType: match }));
-  }, []);
+  }, [eventTypes]);
 
   const patch = useCallback(<K extends FieldKey>(key: K, value: QState[K]) => {
     setS((prev) => ({ ...prev, [key]: value }));
@@ -256,13 +322,12 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
           eventTime: s.eventTime.trim(),
           venueLocation: s.venueName.trim(),
           setting: s.venueSetting.trim(),
-          packages: s.packageOption.trim(),
+          packages: formatPackagePayload(s),
           specialRequests: s.specialRequests.trim(),
         }),
       });
 
       const payload = (await res.json().catch(() => null)) as {
-        requestCode?: string;
         error?: string;
       } | null;
 
@@ -270,7 +335,6 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
         throw new Error(payload?.error || "We couldn’t send your request. Please try again.");
       }
 
-      setRequestId(payload?.requestCode || "—");
       setConfirmOpen(false);
       setSuccessOpen(true);
       setS(emptyQState());
@@ -351,7 +415,7 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                   id="event-type"
                   value={s.eventType}
                   onChange={(v) => patch("eventType", v)}
-                  options={EVENT_TYPES}
+                  options={eventTypes}
                   placeholder="Select event type"
                   invalid={Boolean(errors.eventType)}
                 />
@@ -413,14 +477,33 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
                 <SelectField
                   id="package-option"
                   value={s.packageOption}
-                  onChange={(v) => patch("packageOption", v)}
-                  options={PACKAGE_OPTIONS}
-                  placeholder="Select a package"
+                  onChange={(v) => {
+                    patch("packageOption", v);
+                    if (v !== PACKAGE_CUSTOM_BUDGET) patch("customBudget", "");
+                  }}
+                  options={packageOptions}
+                  placeholder={packageNames.length ? "Select a package" : "Loading packages…"}
                   invalid={Boolean(errors.packageOption)}
                 />
                 <FieldError message={errors.packageOption} />
               </div>
             </div>
+
+            {s.packageOption === PACKAGE_CUSTOM_BUDGET ? (
+              <div className="mt-6" data-field="customBudget">
+                <FieldLabel required>Your budget</FieldLabel>
+                <TextField
+                  id="custom-budget"
+                  type="text"
+                  value={s.customBudget}
+                  onChange={(v) => patch("customBudget", v)}
+                  placeholder="e.g. 45000"
+                  invalid={Boolean(errors.customBudget)}
+                />
+                <p className="mt-2 text-sm text-black/45">Enter an amount in Rs.</p>
+                <FieldError message={errors.customBudget} />
+              </div>
+            ) : null}
 
             <p className="mt-3 text-sm leading-relaxed text-black/55">
               Transport is not included. Prices may vary upon customization and final requirements.
@@ -460,7 +543,6 @@ export function EventQuestionnaire({ variant = "page" }: EventQuestionnaireProps
       />
       <RequestSuccessModal
         open={successOpen}
-        requestId={requestId}
         onDone={() => setSuccessOpen(false)}
       />
     </motion.div>

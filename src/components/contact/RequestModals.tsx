@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { btnPrimaryClass, btnSecondaryClass } from "@/lib/button-classes";
@@ -79,8 +79,8 @@ export function RequestConfirmModal({
               Send this request to Kamellia?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-              We’ll submit your details to our studio and give you a request ID to keep for your
-              records.
+              We’ll send your details to our studio. A member of the team will be in touch to
+              finalise everything with you.
             </p>
             {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
@@ -112,51 +112,27 @@ export function RequestConfirmModal({
 
 type SuccessModalProps = {
   open: boolean;
-  requestId: string;
   onDone: () => void;
 };
 
-export function RequestSuccessModal({ open, requestId, onDone }: SuccessModalProps) {
+export function RequestSuccessModal({ open, onDone }: SuccessModalProps) {
   const titleId = useId();
-  const copyRef = useRef<HTMLButtonElement>(null);
-  const [copied, setCopied] = useState(false);
+  const doneRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!open) {
-      setCopied(false);
-      return;
-    }
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onDone();
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    queueMicrotask(() => copyRef.current?.focus());
+    queueMicrotask(() => doneRef.current?.focus());
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
   }, [open, onDone]);
-
-  const copyId = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(requestId);
-      setCopied(true);
-    } catch {
-      // Fallback for older browsers
-      const el = document.createElement("textarea");
-      el.value = requestId;
-      el.setAttribute("readonly", "");
-      el.style.position = "fixed";
-      el.style.opacity = "0";
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      setCopied(true);
-    }
-  }, [requestId]);
 
   if (typeof document === "undefined") return null;
 
@@ -183,37 +159,23 @@ export function RequestSuccessModal({ open, requestId, onDone }: SuccessModalPro
             transition={{ duration: 0.22 }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-gold)]">
-              Request sent
+              Request received
             </p>
             <h2
               id={titleId}
               className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold text-black"
             >
-              Your request has been received
+              Thank you — we’ve got your request
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-              Please note your request ID and keep it handy. Our studio will follow up with you soon.
+              A member of our studio will contact you within 48 hours to finalise the details of
+              your floral styling.
             </p>
-
-            <div className="mt-6 border border-[var(--color-gold)]/35 bg-[var(--color-surface-raised)] px-4 py-5 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-black/55">
-                Request ID
-              </p>
-              <p className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-wide text-black">
-                {requestId}
-              </p>
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                ref={copyRef}
-                type="button"
-                onClick={() => void copyId()}
-                className={btnSecondaryClass}
-              >
-                {copied ? "Copied" : "Copy ID"}
-              </button>
-              <button type="button" onClick={onDone} className={btnPrimaryClass}>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
+              Please keep your phone nearby so we can reach you easily.
+            </p>
+            <div className="mt-8 flex justify-end">
+              <button ref={doneRef} type="button" onClick={onDone} className={btnPrimaryClass}>
                 Okay
               </button>
             </div>

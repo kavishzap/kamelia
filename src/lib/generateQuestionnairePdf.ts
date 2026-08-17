@@ -169,7 +169,15 @@ export async function buildQuestionnairePdfBlob(s: QState): Promise<Blob> {
   y = drawField(doc, "Event time", s.eventTime, y, pageW);
   y = drawField(doc, "Venue location", s.venueName, y, pageW);
   y = drawField(doc, "Setting", s.venueSetting, y, pageW);
-  y = drawField(doc, "Package", s.packageOption, y, pageW);
+  y = drawField(
+    doc,
+    "Package",
+    s.packageOption === "Enter your budget" && s.customBudget.trim()
+      ? `Enter your budget — Rs ${s.customBudget.trim()}`
+      : s.packageOption,
+    y,
+    pageW,
+  );
   if (s.specialRequests.trim()) {
     y = drawField(doc, "Special requests", s.specialRequests, y, pageW);
   }
@@ -220,7 +228,7 @@ export function buildWhatsappSendPdfHref(s: QState, requestId?: string): string 
     `• Time: ${s.eventTime || "—"}`,
     `• Venue: ${s.venueName || "—"}`,
     `• Setting: ${s.venueSetting || "—"}`,
-    `• Package: ${s.packageOption || "—"}`,
+    `• Package: ${s.packageOption === "Enter your budget" && s.customBudget.trim() ? `Enter your budget — Rs ${s.customBudget.trim()}` : s.packageOption || "—"}`,
   );
   if (s.specialRequests.trim()) {
     lines.push(`• Special requests: ${s.specialRequests.trim()}`);

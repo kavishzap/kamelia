@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { DeviceVisitTracker } from "@/components/DeviceVisitTracker";
 import { SiteJsonLd } from "@/components/SiteJsonLd";
 import { buildRootMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -42,6 +43,7 @@ export default function RootLayout({
         <link rel="preload" href="/herovideo.mp4" as="video" type="video/mp4" />
       </head>
       <body suppressHydrationWarning className="antialiased">
+        <DeviceVisitTracker />
         {children}
       </body>
     </html>
